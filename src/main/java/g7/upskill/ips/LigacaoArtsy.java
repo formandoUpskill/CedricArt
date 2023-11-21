@@ -1,3 +1,5 @@
+package g7.upskill.ips;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import okhttp3.*;
@@ -17,7 +19,12 @@ public class LigacaoArtsy {
         this.xappToken = generateXappToken();
     }
 
-    private String generateXappToken() {
+
+    public static String generateXappToken() {
+
+        OkHttpClient client = new OkHttpClient();
+
+
         String clientId = "9f14b9f06093d764ddf7";
         String clientSecret = "a8f0f836b1832d14bdc0e3e4c75559c4";
         String tokenUrl = "https://api.artsy.net/api/tokens/xapp_token";
