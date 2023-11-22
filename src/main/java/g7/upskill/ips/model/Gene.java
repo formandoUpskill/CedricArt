@@ -23,5 +23,10 @@ public class Gene {
     public void setDescription(String description) {
 
     }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
 

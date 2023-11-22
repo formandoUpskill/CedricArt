@@ -47,10 +47,18 @@ public class GetAllApiGenes {
 
                 for (Gene gene : genes) {
 
-                    String original = gene.getDescription();
-                    String strFinal= original.replaceAll("'"," ");
-                     // gene.setDescription(strFinal);
-                    System.out.println("****" + original.charAt(0) + ":" + strFinal.charAt(0) + "::::");
+                    String origalDescription = gene.getDescription();
+                    String replacedDescription = origalDescription.replace("'", "");
+                    gene.setDescription(replacedDescription);
+
+
+                    String origalName = gene.getName();
+                    String replacedName = origalName.replace("'", "");
+                    gene.setName(replacedName);
+
+                    storage.createGene(gene);
+
+
                 }
 
             } else {
