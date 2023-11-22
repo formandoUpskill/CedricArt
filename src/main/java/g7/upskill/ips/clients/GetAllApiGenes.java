@@ -4,6 +4,7 @@ package g7.upskill.ips.clients;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import g7.upskill.ips.LigacaoArtsy;
+import g7.upskill.ips.MyDBUtils;
 import g7.upskill.ips.model.Gene;
 import g7.upskill.ips.persistence.DBStorage;
 import okhttp3.OkHttpClient;
@@ -18,7 +19,7 @@ public class GetAllApiGenes {
 
     public static void searchAllGenes() {
         OkHttpClient client = new OkHttpClient();
-        String apiUrl = "https://api.artsy.net/api/genes?size=5";
+        String apiUrl = "https://api.artsy.net/api/genes?size=1060";
         String xappToken= LigacaoArtsy.generateXappToken();
         Gson gson = new GsonBuilder().create();
         System.out.println(apiUrl);
@@ -47,17 +48,10 @@ public class GetAllApiGenes {
 
                 for (Gene gene : genes) {
 
-                    String origalDescription = gene.getDescription();
-                    String replacedDescription = origalDescription.replace("'", "");
-                    gene.setDescription(replacedDescription);
-
-
-                    String origalName = gene.getName();
-                    String replacedName = origalName.replace("'", "");
-                    gene.setName(replacedName);
+                    gene.setDescription(MyDBUtils.cleanString(gene.getDescription()));
+                    gene.setName(MyDBUtils.cleanString(gene.getName()));
 
                     storage.createGene(gene);
-
 
                 }
 
