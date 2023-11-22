@@ -5,6 +5,7 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import g7.upskill.ips.LigacaoArtsy;
 import g7.upskill.ips.model.Gene;
+import g7.upskill.ips.persistence.DBStorage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -17,7 +18,7 @@ public class GetAllApiGenes {
 
     public static void searchAllGenes() {
         OkHttpClient client = new OkHttpClient();
-        String apiUrl = "https://api.artsy.net/api/genes?size=1060";
+        String apiUrl = "https://api.artsy.net/api/genes?size=5";
         String xappToken= LigacaoArtsy.generateXappToken();
         Gson gson = new GsonBuilder().create();
         System.out.println(apiUrl);
@@ -26,6 +27,10 @@ public class GetAllApiGenes {
                 .url(apiUrl)
                 .header("X-XAPP-Token", xappToken)
                 .build();
+
+
+        DBStorage storage = new DBStorage();
+
         try {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
@@ -41,7 +46,11 @@ public class GetAllApiGenes {
                 System.out.println(genes.size());
 
                 for (Gene gene : genes) {
-                    System.out.println(gene.getName());
+
+                    String original = gene.getDescription();
+                    String strFinal= original.replaceAll("'"," ");
+                     // gene.setDescription(strFinal);
+                    System.out.println("****" + original.charAt(0) + ":" + strFinal.charAt(0) + "::::");
                 }
 
             } else {
