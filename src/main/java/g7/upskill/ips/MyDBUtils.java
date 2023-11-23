@@ -9,8 +9,8 @@ public class MyDBUtils {
     public static final String DB_SERVER = "localhost";
     public static final String DB_PORT = "3306";
     public static final String DB_NAME = "artsydb";
-    public static final String DB_USER = "root";
-    public static final String DB_PWD = "123456789";
+    public static final String DB_USER = "big";
+    public static final String DB_PWD = "brother";
 
 
 
@@ -18,7 +18,9 @@ public class MyDBUtils {
     public static String cleanString(String original)
     {
 
-        String replaced = original.replaceAll("'", "");
+        String replaced = original.replace("’", "\\’")
+                .replace("\"", "\\\"")
+                .replace("'", "\\'");
 
         return replaced;
     }
