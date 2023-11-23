@@ -43,4 +43,36 @@ public class Exhibition {
     public int getId_Partner() {
         return id_Partner;
     }
+
+    public void setId_Exhibition(int id_Exhibition) {
+        this.id_Exhibition = id_Exhibition;
+    }
+
+    public void setEnd_at(LocalDate end_at) {
+        this.end_at = end_at;
+    }
+
+    public void setStart_at(LocalDate start_at) {
+        this.start_at = start_at;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setId_Partner(int id_Partner) {
+        this.id_Partner = id_Partner;
+    }
 }

@@ -5,7 +5,7 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import g7.upskill.ips.LigacaoArtsy;
 import g7.upskill.ips.MyDBUtils;
-import g7.upskill.ips.model.Artwork;
+import g7.upskill.ips.model.Gallerist;
 import g7.upskill.ips.model.Gene;
 import g7.upskill.ips.persistence.DBStorage;
 import okhttp3.OkHttpClient;
@@ -17,11 +17,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetAllApiArtwork {
+public class GetAllApiGallerist {
 
-    public static void searchAllArtworks() {
+    public static void searchAllGallerists() {
         OkHttpClient client = new OkHttpClient();
-        String apiUrl = "https://api.artsy.net/api/artworks?size=10";
+        String apiUrl = "https://api.artsy.net/api/gallerists?size=10";
         String xappToken= LigacaoArtsy.generateXappToken();
         Gson gson = new GsonBuilder().create();
         System.out.println(apiUrl);
@@ -41,21 +41,16 @@ public class GetAllApiArtwork {
                 String responseBody = response.body().string();
                 JsonParser parser = new JsonParser();
                 JsonObject jsonObject = (JsonObject)parser.parse(responseBody);
-                JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("artwork");
-                // Deserialize a list of genes
-                List<Artwork>  artworks = new ArrayList<>();
-                Type listType = new TypeToken<ArrayList<Artwork>>(){}.getType();
-                artworks = gson.fromJson(data, listType);
-                System.out.println(artworks.size());
+                JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("gallerist");
+                // Deserialize a list of gallerists
+                List<Gallerist>  gallerists = new ArrayList<>();
+                Type listType = new TypeToken<ArrayList<Gallerist>>(){}.getType();
+                gallerists = gson.fromJson(data, listType);
+                System.out.println(gallerists.size());
 
-                for (Artwork artwork : artworks) {
+                for (Gallerist gallerist : gallerists) {
 
-                    artwork.setTitle(MyDBUtils.cleanString(artwork.getTitle()));
-                    artwork.setDate(MyDBUtils.cleanString(artwork.getDate()));
-                    artwork.setThumbnail(MyDBUtils.cleanString(artwork.getThumbnail()));
-                    artwork.setUrl(MyDBUtils.cleanString(artwork.getUrl()));
-
-                    storage.createArtwork(artwork);
+                    storage.createGallerist(gallerist);
 
                 }
 
@@ -71,6 +66,6 @@ public class GetAllApiArtwork {
 
     public static void main(String[] args){
 
-        GetAllApiArtwork.searchAllArtworks();
+        GetAllApiGallerist.searchAllGallerists();
     }
 }

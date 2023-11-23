@@ -18,4 +18,16 @@ public class Coordinator extends User{
     public LocalDate getEnd_at() {
         return end_at;
     }
+
+    public void setId_Gallerist(int id_Gallerist) {
+        this.id_Gallerist = id_Gallerist;
+    }
+
+    public void setStart_at(LocalDate start_at) {
+        this.start_at = start_at;
+    }
+
+    public void setEnd_at(LocalDate end_at) {
+        this.end_at = end_at;
+    }
 }

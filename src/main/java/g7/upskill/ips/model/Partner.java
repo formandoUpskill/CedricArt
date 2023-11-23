@@ -36,4 +36,32 @@ public class Partner {
     public String getId_coordinator() {
         return id_coordinator;
     }
+
+    public void setId_partner(int id_partner) {
+        this.id_partner = id_partner;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public void setId_gallerist(String id_gallerist) {
+        this.id_gallerist = id_gallerist;
+    }
+
+    public void setId_coordinator(String id_coordinator) {
+        this.id_coordinator = id_coordinator;
+    }
 }

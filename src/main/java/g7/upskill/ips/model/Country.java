@@ -11,4 +11,12 @@ public class Country {
     public String getNationality() {
         return nationality;
     }
+
+    public void setCountry_code(String country_code) {
+        this.country_code = country_code;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
 }
