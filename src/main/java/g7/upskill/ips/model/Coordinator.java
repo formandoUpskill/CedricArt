@@ -2,7 +2,7 @@ package g7.upskill.ips.model;
 
 import java.time.LocalDate;
 
-public class Gallerist extends User{
+public class Coordinator extends User{
     private transient int id_Gallerist;
     private LocalDate start_at;
     private LocalDate end_at;

@@ -24,9 +24,5 @@ public class Gene {
 
     }
 
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
 

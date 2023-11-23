@@ -10,7 +10,7 @@ public class DBStorage {
 
     public void createGene(Gene newGene) {
 
-       String sql = "insert into gene (name, description) values ('"+ newGene.getName() + "','" + newGene.getDescription() + "');";
+       String sql = "insert into Gene (name, description) values ('"+ newGene.getName() + "','" + newGene.getDescription() + "');";
 
         System.out.println("insert " + sql);
 
