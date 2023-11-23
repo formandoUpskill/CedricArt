@@ -36,4 +36,32 @@ public class Artwork {
     public int getId_Gene() {
         return id_Gene;
     }
+
+    public void setId_Artwork(int id_Artwork) {
+        this.id_Artwork = id_Artwork;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setId_Exhibition(int id_Exhibition) {
+        this.id_Exhibition = id_Exhibition;
+    }
+
+    public void setId_Gene(int id_Gene) {
+        this.id_Gene = id_Gene;
+    }
 }

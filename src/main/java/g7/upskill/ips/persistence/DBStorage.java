@@ -23,35 +23,52 @@ public class DBStorage {
         }
     }
 
-//    public void createArtist(Artist newArtist) {
-//
-//        String sql = "insert into artist (name, description) values ('"+ newArtist.getName() + "','" + newArtist.getDescription() + "');";
-//
-//        System.out.println("insert " + sql);
-//
-//        try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
-//                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
-//
-//            MyDBUtils.exec_sql(connection,sql);
-//        } catch (SQLException e) {
-//            System.out.println("exec_sql:" + sql + " Error: " + e.getMessage());
-//        }
-//    }
-//
-//    public void createArtwork(Artwork newArtwork) {
-//
-//        String sql = "insert into artwork (name, description) values ('"+ newArtwork.getName() + "','" + newArtwork.getDescription() + "');";
-//
-//        System.out.println("insert " + sql);
-//
-//        try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
-//                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
-//
-//            MyDBUtils.exec_sql(connection,sql);
-//        } catch (SQLException e) {
-//            System.out.println("exec_sql:" + sql + " Error: " + e.getMessage());
-//        }
-//    }
+    public void createArtist(Artist newArtist) {
+
+        String sql = "insert into Artist (location, hometown, name, biography, slug, birthyear, deathyear, thumbnail, " +
+                "url, nationality)" +
+                " values ('"+ newArtist.getLocation() + "','" +
+                newArtist.getHometown() + "','" +
+                newArtist.getName() + "','" +
+                newArtist.getBiography() + "','" +
+                newArtist.getSlug() + "','" +
+                newArtist.getBirthyear() + "','" +
+                newArtist.getDeathyear() + "','" +
+                newArtist.getThumbnail() + "','" +
+                newArtist.getUrl() + "','" +
+                newArtist.getNationality() +
+                "');";
+
+        System.out.println("insert " + sql);
+
+        try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
+
+            MyDBUtils.exec_sql(connection,sql);
+        } catch (SQLException e) {
+            System.out.println("exec_sql:" + sql + " Error: " + e.getMessage());
+        }
+    }
+
+    public void createArtwork(Artwork newArtwork) {
+
+        String sql = "insert into artwork (title, date, thumbnail, url) values ('"+
+                newArtwork.getTitle() + "','" +
+                newArtwork.getDate() + "','" +
+                newArtwork.getThumbnail() + "','" +
+                newArtwork.getUrl() +
+                "');";
+
+        System.out.println("insert " + sql);
+
+        try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
+
+            MyDBUtils.exec_sql(connection,sql);
+        } catch (SQLException e) {
+            System.out.println("exec_sql:" + sql + " Error: " + e.getMessage());
+        }
+    }
 //
 //    public void createCountry(Country newCountry) {
 //

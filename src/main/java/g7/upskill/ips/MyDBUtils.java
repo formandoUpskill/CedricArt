@@ -15,14 +15,15 @@ public class MyDBUtils {
 
 
 
-    public static String cleanString(String original)
-    {
+    public static String cleanString(String original) {
+        if (original != null) {
+            String replaced = original.replace("’", "\\’")
+                    .replace("\"", "\\\"")
+                    .replace("'", "\\'");
 
-        String replaced = original.replace("’", "\\’")
-                .replace("\"", "\\\"")
-                .replace("'", "\\'");
-
-        return replaced;
+            return replaced;
+        }
+        return null;
     }
 
     public enum db_type {DB_MYSQL, DB_SQLSERVER, DB_SQLITE}

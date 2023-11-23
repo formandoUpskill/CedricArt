@@ -1,25 +1,27 @@
 package g7.upskill.ips.clients;
 
+
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import g7.upskill.ips.LigacaoArtsy;
 import g7.upskill.ips.MyDBUtils;
-import g7.upskill.ips.model.Artist;
+import g7.upskill.ips.model.Artwork;
 import g7.upskill.ips.model.Gene;
 import g7.upskill.ips.persistence.DBStorage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetAllApiArtists {
+public class GetAllApiArtwork {
 
-    public static void searchAllArtist() {
+    public static void searchAllArtworks() {
         OkHttpClient client = new OkHttpClient();
-        String apiUrl = "https://api.artsy.net/api/artists?artworks=true&size=10&page=1";
+        String apiUrl = "https://api.artsy.net/api/artwork?size=10";
         String xappToken= LigacaoArtsy.generateXappToken();
         Gson gson = new GsonBuilder().create();
         System.out.println(apiUrl);
@@ -28,6 +30,7 @@ public class GetAllApiArtists {
                 .url(apiUrl)
                 .header("X-XAPP-Token", xappToken)
                 .build();
+
 
         DBStorage storage = new DBStorage();
 
@@ -38,25 +41,20 @@ public class GetAllApiArtists {
                 String responseBody = response.body().string();
                 JsonParser parser = new JsonParser();
                 JsonObject jsonObject = (JsonObject)parser.parse(responseBody);
-                JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("artists");
+                JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("artwork");
                 // Deserialize a list of genes
-                List<Artist>  artists = new ArrayList<>();
-                Type listType = new TypeToken<ArrayList<Artist>>(){}.getType();
-                artists = gson.fromJson(data, listType);
-                System.out.println(artists.size());
+                List<Artwork>  artworks = new ArrayList<>();
+                Type listType = new TypeToken<ArrayList<Gene>>(){}.getType();
+                artworks = gson.fromJson(data, listType);
+                System.out.println(artworks.size());
 
-                for (Artist artist : artists) {
-                    artist.setBiography(MyDBUtils.cleanString(artist.getBiography()));
-                    artist.setBirthyear(MyDBUtils.cleanString(artist.getBirthyear()));
-                    artist.setLocation(MyDBUtils.cleanString(artist.getLocation()));
-                    artist.setHometown(MyDBUtils.cleanString(artist.getHometown()));
-                    artist.setName(MyDBUtils.cleanString(artist.getName()));
-                    artist.setSlug(MyDBUtils.cleanString(artist.getSlug()));
-                    artist.setDeathyear(MyDBUtils.cleanString(artist.getDeathyear()));
-                    artist.setThumbnail(MyDBUtils.cleanString(artist.getThumbnail()));
-                    artist.setUrl(MyDBUtils.cleanString(artist.getUrl()));
-                    artist.setNationality(MyDBUtils.cleanString(artist.getNationality()));
-                    storage.createArtist(artist);
+                for (Artwork artwork : artworks) {
+
+                    artwork.setDescription(MyDBUtils.cleanString(gene.getDescription()));
+                    artwork.setName(MyDBUtils.cleanString(gene.getName()));
+
+                    storage.createArtwork(artwork);
+
                 }
 
             } else {
@@ -65,10 +63,12 @@ public class GetAllApiArtists {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
     }
 
     public static void main(String[] args){
 
-        GetAllApiArtists.searchAllArtist();
+        GetAllApiArtwork.searchAllArtworks();
     }
 }
