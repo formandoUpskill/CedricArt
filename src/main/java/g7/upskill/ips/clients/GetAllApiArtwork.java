@@ -23,7 +23,7 @@ public class GetAllApiArtwork {
 
     public static void searchAllArtworks() {
         OkHttpClient client = new OkHttpClient();
-        String apiUrl = "https://api.artsy.net/api/artworks?artworks=true&size=10&page=1";
+        String apiUrl = "https://api.artsy.net/api/artworks?size=10";
         String xappToken= LigacaoArtsy.generateXappToken();
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
         System.out.println(apiUrl);
@@ -48,7 +48,7 @@ public class GetAllApiArtwork {
                 List<Artwork>  artworks = new ArrayList<>();
                 Type listType = new TypeToken<ArrayList<Artwork>>(){}.getType();
                 artworks = gson.fromJson(data, listType);
-                System.out.println(artworks.size());
+                System.out.println(artworks);
 
                 for (Artwork artwork : artworks) {
 

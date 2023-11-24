@@ -8,6 +8,7 @@ import g7.upskill.ips.model.Artwork;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 public class LocalDateAdapter extends TypeAdapter<LocalDate> {
 
@@ -59,46 +60,40 @@ public class LocalDateAdapter extends TypeAdapter<LocalDate> {
 //        return LocalDate.of(year, month, day);
 
 
-        jsonReader.beginObject();
+
 
         JsonToken token = jsonReader.peek();
 
+        if (token.equals(JsonToken.STRING)) {
+            String dateString = jsonReader.nextString();
 
-        String fieldname = null;
-
-        LocalDate date = null;
-        String dateString = null;
-
-        while (jsonReader.hasNext()) {
-
-            if (token.equals(JsonToken.NAME)) {
-                //get the current token
-                fieldname = jsonReader.nextName();
+            // Tratar intervalos de datas
+            if (dateString.contains("-")) {
+                dateString = dateString.split("-")[0];
             }
 
-            if (("created_at".equals(fieldname)) || ("updated_at".equals(fieldname))) {
-                // Mova para o próximo token
-                token = jsonReader.peek();
+            // Tratar datas aproximadas
+            if (dateString.startsWith("ca.")) {
+                dateString = dateString.substring(3);
+            }
 
-                if (token.equals(JsonToken.STRING)) {
-                    // Se o próximo token for uma String, leia a data
-                    dateString = jsonReader.nextString();
-                    dateString = dateString.substring(0, 10);
+            // Remover espaços em branco
+            dateString = dateString.trim();
 
-                    // Converta a String em um objeto LocalDate
-                    date = LocalDate.parse(dateString);
+            try {
+                // Verificar se a data contém apenas ano (ignorar casos como "Failed to parse date:  ca. 1503")
+                if (dateString.length() == 4) {
+                    return LocalDate.parse(dateString + "-01-01");
+                } else {
+                    return LocalDate.parse(dateString);
                 }
-            } else {
-                // Se não for um campo de data, avance para o próximo token
-                jsonReader.skipValue();
-                token = jsonReader.peek();
+            } catch (DateTimeParseException e) {
+                // Ignorar datas inválidas
+                System.err.println("Failed to parse date: " + dateString);
             }
         }
 
-        jsonReader.endObject();
-
-// Certifique-se de que a data não seja nula antes de retornar
-        return date;
+        return null;
 
     }
 }

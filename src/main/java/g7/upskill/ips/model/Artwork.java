@@ -66,4 +66,17 @@ public class Artwork {
     public void setId_Gene(int id_Gene) {
         this.id_Gene = id_Gene;
     }
+
+    @Override
+    public String toString() {
+        return "Artwork{" +
+                "id_Artwork=" + id_Artwork +
+                ", title='" + title + '\'' +
+                ", date=" + date +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", url='" + url + '\'' +
+                ", id_Exhibition=" + id_Exhibition +
+                ", id_Gene=" + id_Gene +
+                '}';
+    }
 }
