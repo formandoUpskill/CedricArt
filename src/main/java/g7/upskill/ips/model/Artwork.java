@@ -1,9 +1,11 @@
 package g7.upskill.ips.model;
 
+import java.time.LocalDate;
+
 public class Artwork {
     private transient int id_Artwork;
     private String title;
-    private String date;
+    private LocalDate date;
     private String thumbnail;
     private String url;
     private transient int id_Exhibition;
@@ -17,7 +19,7 @@ public class Artwork {
         return title;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -45,7 +47,7 @@ public class Artwork {
         this.title = title;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

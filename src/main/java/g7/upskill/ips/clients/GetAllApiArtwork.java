@@ -5,6 +5,7 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import g7.upskill.ips.LigacaoArtsy;
 import g7.upskill.ips.MyDBUtils;
+import g7.upskill.ips.adapters.LocalDateAdapter;
 import g7.upskill.ips.model.Artwork;
 import g7.upskill.ips.model.Gene;
 import g7.upskill.ips.persistence.DBStorage;
@@ -14,6 +15,7 @@ import okhttp3.Response;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +23,9 @@ public class GetAllApiArtwork {
 
     public static void searchAllArtworks() {
         OkHttpClient client = new OkHttpClient();
-        String apiUrl = "https://api.artsy.net/api/artworks?size=10";
+        String apiUrl = "https://api.artsy.net/api/artworks?artworks=true&size=10&page=1";
         String xappToken= LigacaoArtsy.generateXappToken();
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
         System.out.println(apiUrl);
         System.out.println(apiUrl);
         Request request = new Request.Builder()
@@ -41,7 +43,7 @@ public class GetAllApiArtwork {
                 String responseBody = response.body().string();
                 JsonParser parser = new JsonParser();
                 JsonObject jsonObject = (JsonObject)parser.parse(responseBody);
-                JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("artwork");
+                JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("artworks");
                 // Deserialize a list of genes
                 List<Artwork>  artworks = new ArrayList<>();
                 Type listType = new TypeToken<ArrayList<Artwork>>(){}.getType();
@@ -51,7 +53,6 @@ public class GetAllApiArtwork {
                 for (Artwork artwork : artworks) {
 
                     artwork.setTitle(MyDBUtils.cleanString(artwork.getTitle()));
-                    artwork.setDate(MyDBUtils.cleanString(artwork.getDate()));
                     artwork.setThumbnail(MyDBUtils.cleanString(artwork.getThumbnail()));
                     artwork.setUrl(MyDBUtils.cleanString(artwork.getUrl()));
 
