@@ -1,5 +1,7 @@
 package g7.upskill.ips;
 
+import java.time.LocalDate;
+
 public class Main {
     public static void main(String[] args) {
 
@@ -29,6 +31,23 @@ public class Main {
         // Display the original and replaced strings
         System.out.println("Original String: " + originalString);
         System.out.println("Replaced String: " + replacedString);
+
+
+
+        String dateString="2010-12-20T19:48:55+00:00";
+
+        String YearMonthDay = dateString.substring(0,10);
+
+        LocalDate date = LocalDate.parse(YearMonthDay);
+
+        System.out.println("date: " + date);
+
+
+
+
+
+
+
 
     }
 }
