@@ -2,13 +2,13 @@ package g7.upskill.ips.model;
 
 public class Gene {
 
-    private transient int id;
+    private String id;
 
     private String name;
 
     private String description;
 
-    public int getId() {
+    public String getId() {
        return id;
      }
 

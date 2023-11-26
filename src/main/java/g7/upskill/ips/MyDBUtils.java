@@ -163,6 +163,7 @@ public class MyDBUtils {
     public static Object lookup(Connection conn, String field, String table, String where_cond,String default_value) throws SQLException
     {
         String cmdSQL = get_select_command(field, table, where_cond);
+
         ResultSet rs = exec_query(conn, cmdSQL);
 
         if (rs.next())

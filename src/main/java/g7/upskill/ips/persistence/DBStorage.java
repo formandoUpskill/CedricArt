@@ -10,7 +10,8 @@ public class DBStorage {
 
     public void createGene(Gene newGene) {
 
-       String sql = "insert into Gene (name, description) values ('" +
+       String sql = "insert into Gene (id_gene, name, description) values ('" +
+               newGene.getId()+ "','" +
                newGene.getName() + "','" +
                newGene.getDescription() + "');";
 
@@ -27,9 +28,10 @@ public class DBStorage {
 
     public void createArtist(Artist newArtist) {
 
-        String sql = "insert into Artist (location, hometown, name, biography, slug, birthyear, deathyear, thumbnail, " +
+        String sql = "insert into Artist (id_Artist, location, hometown, name, biography, slug, birthyear, deathyear, thumbnail, " +
                 "url, nationality)" +
-                " values ('"+ newArtist.getLocation() + "','" +
+                " values ('"+ newArtist.getId() + "','" +
+                newArtist.getLocation() + "','" +
                 newArtist.getHometown() + "','" +
                 newArtist.getName() + "','" +
                 newArtist.getBiography() + "','" +
@@ -52,25 +54,53 @@ public class DBStorage {
         }
     }
 
+    private String getIdGene(String categoria)
+    {
+
+
+        String default_Value ="NA";
+        Object Id_Gene;
+
+        try( Connection connection  = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD))
+        {
+
+            Id_Gene=  MyDBUtils.lookup(connection, "id_Gene", "Gene", "name='" + categoria +"'", default_Value);
+
+           return Id_Gene.toString();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+       return default_Value;
+    }
+
+
     public void createArtwork(Artwork newArtwork) {
 
-        String sql = "insert into Artwork (title, created_at, updated_at, date, thumbnail, url) values ('"+
+
+       String id_gene= getIdGene(newArtwork.getCategory());
+
+
+        String sqlInsert = "insert into Artwork (id_Artwork, title, created_at, updated_at, date, thumbnail, url, id_Gene) values ('"+
+                newArtwork.getId() + "','" +
                 newArtwork.getTitle() + "','" +
                 newArtwork.getCreated_at() + "','" +
                 newArtwork.getUpdated_at()+ "','" +
                 newArtwork.getDate()+ "','" +
                 newArtwork.getThumbnail() + "','" +
-                newArtwork.getUrl() +
+                newArtwork.getUrl() + "','" +
+                id_gene +
                 "');";
 
-        System.out.println("insert " + sql);
+        System.out.println("insert " + sqlInsert);
 
         try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
                 MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
 
-            MyDBUtils.exec_sql(connection,sql);
+            MyDBUtils.exec_sql(connection,sqlInsert);
         } catch (SQLException e) {
-            System.out.println("exec_sql:" + sql + " Error: " + e.getMessage());
+            System.out.println("exec_sql:" + sqlInsert + " Error: " + e.getMessage());
         }
     }
 

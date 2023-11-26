@@ -21,7 +21,7 @@ public class GetAllApiGenes {
         OkHttpClient client = new OkHttpClient();
         String apiUrl = "https://api.artsy.net/api/genes?size=1060";
         String xappToken= LigacaoArtsy.generateXappToken();
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.out.println(apiUrl);
         System.out.println(apiUrl);
         Request request = new Request.Builder()

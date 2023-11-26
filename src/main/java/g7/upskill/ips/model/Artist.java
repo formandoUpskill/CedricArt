@@ -1,7 +1,7 @@
 package g7.upskill.ips.model;
 
 public class Artist {
-    private transient int id_Artist;
+    private String id;
     private String location;
     private String hometown;
     private String name;
@@ -19,8 +19,8 @@ public class Artist {
         return name;
     }
 
-    public int getId_Artist() {
-        return id_Artist;
+    public String getId() {
+        return id;
     }
 
     public String getLocation() {
@@ -63,8 +63,8 @@ public class Artist {
         return country_code;
     }
 
-    public void setId_Artist(int id_Artist) {
-        this.id_Artist = id_Artist;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setLocation(String location) {

@@ -24,9 +24,9 @@ public class GetAllApiArtwork {
 
     public static void searchAllArtworks() {
         OkHttpClient client = new OkHttpClient();
-        String apiUrl = "https://api.artsy.net/api/artworks?size=100";
+        String apiUrl = "https://api.artsy.net/api/artworks?size=1";
         String xappToken= LigacaoArtsy.generateXappToken();
-       Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter()).create();
+       Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter()).setPrettyPrinting().create();
       //  Gson gson = new GsonBuilder().create();
         System.out.println(apiUrl);
         Request request = new Request.Builder()

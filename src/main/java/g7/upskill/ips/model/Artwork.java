@@ -7,8 +7,7 @@ import java.util.UUID;
 
 
 public class Artwork {
-    private transient int id_Artwork;
-
+    private String id;
 
     private String title;
 
@@ -19,11 +18,16 @@ public class Artwork {
     private String url;
 
     private String date;
-    private transient int id_Exhibition;
-    private transient int id_Gene;
 
-    public int getId_Artwork() {
-        return id_Artwork;
+
+
+    private String category;
+
+    private transient int id_Exhibition;
+    private String id_Gene;
+
+    public String getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -50,15 +54,23 @@ public class Artwork {
         return id_Exhibition;
     }
 
-    public int getId_Gene() {
+    public String getId_Gene() {
         return id_Gene;
     }
 
-    public void setId_Artwork(int id_Artwork) {
-        this.id_Artwork = id_Artwork;
+    public void setId (String id_Artwork) {
+        this.id = id;
     }
 
-    public void setTitle(String title) {
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setTitle (String title) {
         this.title = title;
     }
 
@@ -78,7 +90,7 @@ public class Artwork {
         this.id_Exhibition = id_Exhibition;
     }
 
-    public void setId_Gene(int id_Gene) {
+    public void setId_Gene(String id_Gene) {
         this.id_Gene = id_Gene;
     }
 
@@ -97,15 +109,16 @@ public class Artwork {
     @Override
     public String toString() {
         return "Artwork{" +
-                "id_Artwork=" + id_Artwork +
+                "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
                 ", thumbnail='" + thumbnail + '\'' +
                 ", url='" + url + '\'' +
                 ", date='" + date + '\'' +
+                ", category='" + category + '\'' +
                 ", id_Exhibition=" + id_Exhibition +
-                ", id_Gene=" + id_Gene +
+                ", id_Gene='" + id_Gene + '\'' +
                 '}';
     }
 }
