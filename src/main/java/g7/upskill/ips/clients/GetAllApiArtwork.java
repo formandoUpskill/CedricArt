@@ -16,6 +16,7 @@ import okhttp3.Response;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,10 +24,10 @@ public class GetAllApiArtwork {
 
     public static void searchAllArtworks() {
         OkHttpClient client = new OkHttpClient();
-        String apiUrl = "https://api.artsy.net/api/artworks?size=10";
+        String apiUrl = "https://api.artsy.net/api/artworks?size=100";
         String xappToken= LigacaoArtsy.generateXappToken();
-        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
-        System.out.println(apiUrl);
+       Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter()).create();
+      //  Gson gson = new GsonBuilder().create();
         System.out.println(apiUrl);
         Request request = new Request.Builder()
                 .url(apiUrl)
@@ -44,19 +45,24 @@ public class GetAllApiArtwork {
                 JsonParser parser = new JsonParser();
                 JsonObject jsonObject = (JsonObject)parser.parse(responseBody);
                 JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("artworks");
+
+                System.out.println("data " + data);
                 // Deserialize a list of genes
                 List<Artwork>  artworks = new ArrayList<>();
                 Type listType = new TypeToken<ArrayList<Artwork>>(){}.getType();
                 artworks = gson.fromJson(data, listType);
-                System.out.println(artworks);
+
 
                 for (Artwork artwork : artworks) {
 
                     artwork.setTitle(MyDBUtils.cleanString(artwork.getTitle()));
                     artwork.setThumbnail(MyDBUtils.cleanString(artwork.getThumbnail()));
                     artwork.setUrl(MyDBUtils.cleanString(artwork.getUrl()));
+                    artwork.setDate(MyDBUtils.cleanString(artwork.getDate()));
+
 
                     storage.createArtwork(artwork);
+
 
                 }
 

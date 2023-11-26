@@ -1,6 +1,9 @@
 package g7.upskill.ips;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) {
@@ -42,8 +45,16 @@ public class Main {
 
         System.out.println("date: " + date);
 
+        String dateStr = "2010-12-20T19:48:55+00:00";
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+        LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
+        System.out.println(dateTime);
 
 
+        String uuidString = "4d8b92eb4eb68a1b2c000968";
+        UUID uuid = UUID.fromString(uuidString);
+        System.out.println(uuid);
 
 
 

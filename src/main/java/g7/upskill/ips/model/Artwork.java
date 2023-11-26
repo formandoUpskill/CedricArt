@@ -1,13 +1,24 @@
 package g7.upskill.ips.model;
 
-import java.time.LocalDate;
+
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 
 public class Artwork {
     private transient int id_Artwork;
+
+
     private String title;
-    private LocalDate date;
+
+
+     private LocalDateTime created_at;
+    private LocalDateTime updated_at;
     private String thumbnail;
     private String url;
+
+    private String date;
     private transient int id_Exhibition;
     private transient int id_Gene;
 
@@ -19,8 +30,12 @@ public class Artwork {
         return title;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
     }
 
     public String getThumbnail() {
@@ -47,8 +62,8 @@ public class Artwork {
         this.title = title;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setCreated_at(LocalDateTime date) {
+        this.created_at = date;
     }
 
     public void setThumbnail(String thumbnail) {
@@ -67,14 +82,28 @@ public class Artwork {
         this.id_Gene = id_Gene;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updated_at = updated_at;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     @Override
     public String toString() {
         return "Artwork{" +
                 "id_Artwork=" + id_Artwork +
                 ", title='" + title + '\'' +
-                ", date=" + date +
+                ", created_at=" + created_at +
+                ", updated_at=" + updated_at +
                 ", thumbnail='" + thumbnail + '\'' +
                 ", url='" + url + '\'' +
+                ", date='" + date + '\'' +
                 ", id_Exhibition=" + id_Exhibition +
                 ", id_Gene=" + id_Gene +
                 '}';

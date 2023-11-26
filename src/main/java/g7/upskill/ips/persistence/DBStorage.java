@@ -54,9 +54,11 @@ public class DBStorage {
 
     public void createArtwork(Artwork newArtwork) {
 
-        String sql = "insert into Artwork (title, date, thumbnail, url) values ('"+
+        String sql = "insert into Artwork (title, created_at, updated_at, date, thumbnail, url) values ('"+
                 newArtwork.getTitle() + "','" +
-                newArtwork.getDate() + "','" +
+                newArtwork.getCreated_at() + "','" +
+                newArtwork.getUpdated_at()+ "','" +
+                newArtwork.getDate()+ "','" +
                 newArtwork.getThumbnail() + "','" +
                 newArtwork.getUrl() +
                 "');";

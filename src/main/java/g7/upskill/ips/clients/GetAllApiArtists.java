@@ -56,6 +56,8 @@ public class GetAllApiArtists {
                     artist.setThumbnail(MyDBUtils.cleanString(artist.getThumbnail()));
                     artist.setUrl(MyDBUtils.cleanString(artist.getUrl()));
                     artist.setNationality(MyDBUtils.cleanString(artist.getNationality()));
+
+
                     storage.createArtist(artist);
                 }
 
