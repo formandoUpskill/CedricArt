@@ -19,7 +19,7 @@ public class GetAllApiArtists {
 
     public static void searchAllArtist() {
         OkHttpClient client = new OkHttpClient();
-        String apiUrl = "https://api.artsy.net/api/artists?artworks=true&size=100&page=1";
+        String apiUrl = "https://api.artsy.net/api/artists?artworks=true&size=1&page=1";
         String xappToken= LigacaoArtsy.generateXappToken();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.out.println(apiUrl);
