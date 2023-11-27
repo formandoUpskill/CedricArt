@@ -23,7 +23,7 @@ public class GetAllApiArtists {
         String xappToken= LigacaoArtsy.generateXappToken();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.out.println(apiUrl);
-        System.out.println(apiUrl);
+
         Request request = new Request.Builder()
                 .url(apiUrl)
                 .header("X-XAPP-Token", xappToken)
@@ -39,13 +39,16 @@ public class GetAllApiArtists {
                 JsonParser parser = new JsonParser();
                 JsonObject jsonObject = (JsonObject)parser.parse(responseBody);
                 JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("artists");
+                System.out.println("data " + data);
                 // Deserialize a list of genes
                 List<Artist>  artists = new ArrayList<>();
                 Type listType = new TypeToken<ArrayList<Artist>>(){}.getType();
                 artists = gson.fromJson(data, listType);
-                System.out.println(artists.size());
+
 
                 for (Artist artist : artists) {
+
+
                     artist.setBiography(MyDBUtils.cleanString(artist.getBiography()));
                     artist.setBirthyear(MyDBUtils.cleanString(artist.getBirthyear()));
                     artist.setLocation(MyDBUtils.cleanString(artist.getLocation()));
@@ -57,6 +60,7 @@ public class GetAllApiArtists {
                     artist.setUrl(MyDBUtils.cleanString(artist.getUrl()));
                     artist.setNationality(MyDBUtils.cleanString(artist.getNationality()));
 
+                   System.out.println( "art " + artist.getArtworksLink());
 
                     storage.createArtist(artist);
                 }
