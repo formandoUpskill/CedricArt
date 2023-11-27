@@ -17,10 +17,14 @@ import java.util.List;
 
 public class GetAllApiArtists {
 
-    public static void searchAllArtist() {
+    public static void searchAllArtist(String xappToken, String apiUrl) {
+
+        if (apiUrl.isBlank())
+        {
+            apiUrl = "https://api.artsy.net/api/artists?artworks=true&size=1&page=1";
+        }
         OkHttpClient client = new OkHttpClient();
-        String apiUrl = "https://api.artsy.net/api/artists?artworks=true&size=1&page=1";
-        String xappToken= LigacaoArtsy.generateXappToken();
+
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.out.println(apiUrl);
 
@@ -63,10 +67,6 @@ public class GetAllApiArtists {
 
                     storage.createArtist(artist);
 
-                  //  System.out.println( "art " + artist.getArtworksLink());
-
-                   // GetAllApiArtwork.searchArtworksByArtist(artist.getArtworksLink());
-
 
                 }
 
@@ -80,68 +80,9 @@ public class GetAllApiArtists {
 
 
 
-
-    public static void searchArtistByApiURL(String apiUrl) {
-        OkHttpClient client = new OkHttpClient();
-        String xappToken= LigacaoArtsy.generateXappToken();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        System.out.println(apiUrl);
-
-        Request request = new Request.Builder()
-                .url(apiUrl)
-                .header("X-XAPP-Token", xappToken)
-                .build();
-
-        DBStorage storage = new DBStorage();
-
-        try {
-            Response response = client.newCall(request).execute();
-            if (response.isSuccessful()) {
-                // Processar a resposta aqui conforme necessário
-                String responseBody = response.body().string();
-                JsonParser parser = new JsonParser();
-                JsonObject jsonObject = (JsonObject)parser.parse(responseBody);
-                JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("artists");
-                System.out.println("data " + data);
-                // Deserialize a list of genes
-                List<Artist>  artists = new ArrayList<>();
-                Type listType = new TypeToken<ArrayList<Artist>>(){}.getType();
-                artists = gson.fromJson(data, listType);
-
-
-                for (Artist artist : artists) {
-
-
-                    artist.setBiography(MyDBUtils.cleanString(artist.getBiography()));
-                    artist.setBirthyear(MyDBUtils.cleanString(artist.getBirthyear()));
-                    artist.setLocation(MyDBUtils.cleanString(artist.getLocation()));
-                    artist.setHometown(MyDBUtils.cleanString(artist.getHometown()));
-                    artist.setName(MyDBUtils.cleanString(artist.getName()));
-                    artist.setSlug(MyDBUtils.cleanString(artist.getSlug()));
-                    artist.setDeathyear(MyDBUtils.cleanString(artist.getDeathyear()));
-                    artist.setThumbnail(MyDBUtils.cleanString(artist.getThumbnail()));
-                    artist.setUrl(MyDBUtils.cleanString(artist.getUrl()));
-                    artist.setNationality(MyDBUtils.cleanString(artist.getNationality()));
-
-
-                    storage.createArtist(artist);
-
-                    System.out.println( "art " + artist.getArtworksLink());
-
-                 //   GetAllApiArtwork.searchArtworksByArtist(artist.getArtworksLink());
-
-
-                }
-
-            } else {
-                System.out.println("Falha na solicitação à API. Código de resposta: " + response.code());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     public static void main(String[] args){
 
-        GetAllApiArtists.searchAllArtist();
+     //   GetAllApiArtists.searchAllArtist();
     }
+
 }

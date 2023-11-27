@@ -22,68 +22,18 @@ import java.util.List;
 
 public class GetAllApiArtwork {
 
-    public static void searchAllArtworks() {
-
-        OkHttpClient client = new OkHttpClient();
-        String apiUrl = "https://api.artsy.net/api/artworks?size=1";
-        String xappToken= LigacaoArtsy.generateXappToken();
-       Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter()).setPrettyPrinting().create();
-      //  Gson gson = new GsonBuilder().create();
-        System.out.println(apiUrl);
-        Request request = new Request.Builder()
-                .url(apiUrl)
-                .header("X-XAPP-Token", xappToken)
-                .build();
+    public static void searchAllArtworks(String xappToken, String apiUrl,String idGene  ) {
 
 
-        DBStorage storage = new DBStorage();
-
-        try {
-            Response response = client.newCall(request).execute();
-            if (response.isSuccessful()) {
-                // Processar a resposta aqui conforme necessário
-                String responseBody = response.body().string();
-                JsonParser parser = new JsonParser();
-                JsonObject jsonObject = (JsonObject)parser.parse(responseBody);
-                JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("artworks");
-
-                System.out.println("data " + data);
-                // Deserialize a list of genes
-                List<Artwork>  artworks = new ArrayList<>();
-                Type listType = new TypeToken<ArrayList<Artwork>>(){}.getType();
-                artworks = gson.fromJson(data, listType);
-
-
-                for (Artwork artwork : artworks) {
-
-                    artwork.setTitle(MyDBUtils.cleanString(artwork.getTitle()));
-                    artwork.setThumbnail(MyDBUtils.cleanString(artwork.getThumbnail()));
-                    artwork.setUrl(MyDBUtils.cleanString(artwork.getUrl()));
-                    artwork.setDate(MyDBUtils.cleanString(artwork.getDate()));
-
-
-                    storage.createArtwork(artwork);
-
-
-                }
-
-            } else {
-                System.out.println("Falha na solicitação à API. Código de resposta: " + response.code());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (apiUrl.isBlank())
+        {
+            apiUrl = "https://api.artsy.net/api/artworks?size=1000";
         }
 
-
-    }
-
-
-    public static void searchArtworksByApiURL(String apiUrl, String idGene ) {
-
         OkHttpClient client = new OkHttpClient();
-        String xappToken= LigacaoArtsy.generateXappToken();
-        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter()).setPrettyPrinting().create();
-        //  Gson gson = new GsonBuilder().create();
+
+       Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter()).setPrettyPrinting().create();
+
         System.out.println(apiUrl);
         Request request = new Request.Builder()
                 .url(apiUrl)
@@ -117,7 +67,6 @@ public class GetAllApiArtwork {
                     artwork.setDate(MyDBUtils.cleanString(artwork.getDate()));
                     artwork.setId_Gene(idGene);
 
-
                     storage.createArtwork(artwork);
 
 
@@ -133,8 +82,11 @@ public class GetAllApiArtwork {
 
     }
 
+
     public static void main(String[] args){
 
-        GetAllApiArtwork.searchAllArtworks();
+   //     GetAllApiArtwork.searchAllArtworks();
     }
+
+
 }

@@ -69,9 +69,9 @@ public class GetAllApiGenes {
 
 
 
-                    GetAllApiArtists.searchArtistByApiURL (gene.getArtistsLink());
+                    GetAllApiArtists.searchAllArtist (xappToken, gene.getArtistsLink());
 
-                    GetAllApiArtwork.searchArtworksByApiURL(gene.getArtworksLink(),idGene);
+                    GetAllApiArtwork.searchAllArtworks(xappToken, gene.getArtworksLink(),idGene);
 
                 }
 
@@ -90,11 +90,13 @@ public class GetAllApiGenes {
 
     }
 
-    public static void main(String[] args){
-
+    public static void main(String[] args) {
+/*
         boolean testMode= true;
 
         String xappToken= LigacaoArtsy.generateXappToken();
         GetAllApiGenes.searchAllGenes(xappToken, testMode);
+    }
+    */
     }
 }
