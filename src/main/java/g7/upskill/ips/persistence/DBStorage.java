@@ -1,10 +1,16 @@
 package g7.upskill.ips.persistence;
 
+import g7.upskill.ips.ListIdDesc;
 import g7.upskill.ips.MyDBUtils;
 import g7.upskill.ips.model.*;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class DBStorage {
 
@@ -75,6 +81,38 @@ public class DBStorage {
        return default_Value;
     }
 
+
+
+    public static List getAllGenesDB()
+
+    {
+
+        List listGenes = new ArrayList<>();
+        Gene gene;
+
+        try( Connection connection  = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD))
+        {
+
+         ResultSet rs= MyDBUtils.lookup(connection, "*", "gene");
+         while (rs.next())
+         {
+             gene= new Gene();
+             gene.setId(rs.getString("id_Gene"));
+             gene.setName(rs.getString("name"));
+             gene.setDescription(rs.getString("description"));
+
+             listGenes.add(gene);
+         }
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return listGenes;
+
+    }
 
     public void createArtwork(Artwork newArtwork) {
 

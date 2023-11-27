@@ -27,6 +27,7 @@ public class Gene {
     }
 
     public void setDescription(String description) {
+        this.description  = description;
 
     }
 
@@ -240,6 +241,16 @@ public class Gene {
 
     public void setLinks(Links links) {
         this.links = links;
+    }
+
+    @Override
+    public String toString() {
+        return "Gene{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", links=" + links +
+                '}';
     }
 }
 

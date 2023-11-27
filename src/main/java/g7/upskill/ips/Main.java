@@ -1,8 +1,13 @@
 package g7.upskill.ips;
 
+import g7.upskill.ips.model.Artist;
+import g7.upskill.ips.model.Gene;
+import g7.upskill.ips.persistence.DBStorage;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 
 public class Main {
@@ -29,7 +34,9 @@ public class Main {
                 "class created the conditions for a dynamic art market with a preference for portraits, still lifes, cityscapes, and scenes of everyday life";
 
         // Replace the first single quote with another character or sequence
-        String replacedString = originalString.replace("'", "");
+
+
+      /*  String replacedString = originalString.replace("'", "");
 
         // Display the original and replaced strings
         System.out.println("Original String: " + originalString);
@@ -55,10 +62,14 @@ public class Main {
         String uuidString = "4d8b92eb4eb68a1b2c000968";
         UUID uuid = UUID.fromString(uuidString);
         System.out.println(uuid);
+*/
 
 
+     List listGenes=   DBStorage.getAllGenesDB();
 
-
+      for (int i= 0; i< listGenes.size(); i++){
+          System.out.println(listGenes.get(i).toString());
+      }
 
     }
 }

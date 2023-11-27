@@ -115,6 +115,13 @@ public class MyDBUtils {
 
     }
 
+
+    public static String get_select_command(String fields, String table)
+    {
+        return "SELECT "+ fields+ " FROM " + table ;
+
+    }
+
     public static String get_select_command(String fields, String tables, String where_cond, String order_by)
     {
         return (get_select_command(fields,tables, where_cond) + " ORDER BY " + order_by);
@@ -146,6 +153,18 @@ public class MyDBUtils {
         return rs.next() && rs.getInt(1) != 0;
 
     }
+
+
+
+    public static ResultSet lookup(Connection conn, String field, String table) throws SQLException
+    {
+        String cmdSQL = get_select_command(field, table);
+
+        ResultSet rs = exec_query(conn, cmdSQL);
+
+        return rs;
+    }
+
 
     /**
      * Crie o método público Object lookup que devolve o valor do campo field existente na tabela

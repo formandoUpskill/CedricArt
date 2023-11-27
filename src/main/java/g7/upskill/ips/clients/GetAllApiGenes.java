@@ -17,10 +17,14 @@ import java.util.List;
 
 public class GetAllApiGenes {
 
-    public static void searchAllGenes() {
+    public static void searchAllGenes(String xappToken, boolean isTestMode) {
+
+        String apiUrl="https://api.artsy.net/api/genes?size=1060";
         OkHttpClient client = new OkHttpClient();
-        String apiUrl = "https://api.artsy.net/api/genes?size=1060";
-        String xappToken= LigacaoArtsy.generateXappToken();
+        if (isTestMode)
+           apiUrl = "https://api.artsy.net/api/genes?size=1060";
+
+
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.out.println(apiUrl);
         System.out.println(apiUrl);
@@ -70,8 +74,16 @@ public class GetAllApiGenes {
 
     }
 
+    public void getAllGenesDB(){
+
+
+    }
+
     public static void main(String[] args){
 
-        GetAllApiGenes.searchAllGenes();
+        boolean testMode= false;
+
+        String xappToken= LigacaoArtsy.generateXappToken();
+        GetAllApiGenes.searchAllGenes(xappToken, testMode);
     }
 }
