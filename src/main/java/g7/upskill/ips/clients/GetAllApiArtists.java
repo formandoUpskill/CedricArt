@@ -63,9 +63,9 @@ public class GetAllApiArtists {
 
                     storage.createArtist(artist);
 
-                    System.out.println( "art " + artist.getArtworksLink());
+                  //  System.out.println( "art " + artist.getArtworksLink());
 
-                    GetAllApiArtwork.searchArtworksByArtist(artist.getArtworksLink());
+                   // GetAllApiArtwork.searchArtworksByArtist(artist.getArtworksLink());
 
 
                 }
@@ -81,7 +81,7 @@ public class GetAllApiArtists {
 
 
 
-    public static void searchArtistById(String apiUrl) {
+    public static void searchArtistByApiURL(String apiUrl) {
         OkHttpClient client = new OkHttpClient();
         String xappToken= LigacaoArtsy.generateXappToken();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -128,7 +128,7 @@ public class GetAllApiArtists {
 
                     System.out.println( "art " + artist.getArtworksLink());
 
-                    GetAllApiArtwork.searchArtworksByArtist(artist.getArtworksLink());
+                 //   GetAllApiArtwork.searchArtworksByArtist(artist.getArtworksLink());
 
 
                 }

@@ -41,6 +41,10 @@ public class Gene {
     }
 
 
+    public String getArtworksLink() {
+        return links.artworks.href;
+    }
+
     // Inner class representing the "_links" part of the JSON
     public static class Links {
         private Thumbnail thumbnail;

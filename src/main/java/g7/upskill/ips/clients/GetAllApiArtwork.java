@@ -78,7 +78,7 @@ public class GetAllApiArtwork {
     }
 
 
-    public static void searchArtworksByArtist(String apiUrl ) {
+    public static void searchArtworksByApiURL(String apiUrl, String idGene ) {
 
         OkHttpClient client = new OkHttpClient();
         String xappToken= LigacaoArtsy.generateXappToken();
@@ -115,6 +115,7 @@ public class GetAllApiArtwork {
                     artwork.setThumbnail(MyDBUtils.cleanString(artwork.getThumbnail()));
                     artwork.setUrl(MyDBUtils.cleanString(artwork.getUrl()));
                     artwork.setDate(MyDBUtils.cleanString(artwork.getDate()));
+                    artwork.setId_Gene(idGene);
 
 
                     storage.createArtwork(artwork);

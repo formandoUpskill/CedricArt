@@ -117,7 +117,7 @@ public class DBStorage {
     public void createArtwork(Artwork newArtwork) {
 
 
-       String id_gene= getIdGene(newArtwork.getCategory());
+      String id_gene= getIdGene(newArtwork.getCategory());
 
 
         String sqlInsert = "insert into Artwork (id_Artwork, title, created_at, updated_at, date, thumbnail, url, id_Gene) values ('"+
@@ -128,7 +128,7 @@ public class DBStorage {
                 newArtwork.getDate()+ "','" +
                 newArtwork.getThumbnail() + "','" +
                 newArtwork.getUrl() + "','" +
-                id_gene +
+                newArtwork.getId_Gene() +
                 "');";
 
         System.out.println("insert " + sqlInsert);

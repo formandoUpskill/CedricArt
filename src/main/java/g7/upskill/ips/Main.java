@@ -64,12 +64,15 @@ public class Main {
         System.out.println(uuid);
 */
 
-
+/*
      List listGenes=   DBStorage.getAllGenesDB();
 
       for (int i= 0; i< listGenes.size(); i++){
           System.out.println(listGenes.get(i).toString());
       }
+*/
+
+     //   System.out.println("e4e02c6b-8d34-11ee-8122-d0395752c1b8".length());
 
     }
 }

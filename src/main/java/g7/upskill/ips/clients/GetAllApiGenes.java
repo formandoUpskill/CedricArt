@@ -20,10 +20,13 @@ public class GetAllApiGenes {
     public static void searchAllGenes(String xappToken, boolean isTestMode) {
 
         String apiUrl="https://api.artsy.net/api/genes?size=1060";
+
         OkHttpClient client = new OkHttpClient();
         if (isTestMode)
-           apiUrl = "https://api.artsy.net/api/genes?size=1060";
+           apiUrl = "https://api.artsy.net/api/genes?id=4d90d190dcdd5f44a5000032";
 
+
+        String idGene="";
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.out.println(apiUrl);
@@ -58,9 +61,17 @@ public class GetAllApiGenes {
 
                    storage.createGene(gene);
 
+                   idGene= gene.getId();
+
                     System.out.println( "artists " + gene.getArtistsLink());
 
-                    GetAllApiArtists.searchArtistById(gene.getArtistsLink());
+                    System.out.println( "artworks  " + gene.getArtworksLink());
+
+
+
+                    GetAllApiArtists.searchArtistByApiURL (gene.getArtistsLink());
+
+                    GetAllApiArtwork.searchArtworksByApiURL(gene.getArtworksLink(),idGene);
 
                 }
 
@@ -81,7 +92,7 @@ public class GetAllApiGenes {
 
     public static void main(String[] args){
 
-        boolean testMode= false;
+        boolean testMode= true;
 
         String xappToken= LigacaoArtsy.generateXappToken();
         GetAllApiGenes.searchAllGenes(xappToken, testMode);
