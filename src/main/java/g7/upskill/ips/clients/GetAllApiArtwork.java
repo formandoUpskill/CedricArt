@@ -70,6 +70,12 @@ public class GetAllApiArtwork {
                     storage.createArtwork(artwork);
 
 
+
+                    // para cada artwork ir buscar o link das galerias
+                  //  GetAllApiPartners.searchAllPartners(xappToken,  artwork.getPartnersLink(),,idGalerist, idCoordinator);
+
+
+
                 }
 
             } else {

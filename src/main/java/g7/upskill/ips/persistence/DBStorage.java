@@ -142,6 +142,35 @@ public class DBStorage {
         }
     }
 
+
+
+    public void createPartner(Partner newPartner) {
+
+
+
+        String sqlInsert = "insert into Partner (id_Partner,region, url, name, website, id_Gallerist, id_Coordinator ) values ('"+
+                 newPartner.getId() + "','" +
+                newPartner.getRegion() + "','" +
+                newPartner.getUrl() + "','" +
+                newPartner.getName()+ "','" +
+                newPartner.getWebsite()+ "','" +
+                newPartner.getId_gallerist() + "','" +
+                newPartner.getId_coordinator() +
+                "');";
+
+        System.out.println("insert " + sqlInsert);
+
+        try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
+
+            MyDBUtils.exec_sql(connection,sqlInsert);
+        } catch (SQLException e) {
+            System.out.println("exec_sql:" + sqlInsert + " Error: " + e.getMessage());
+        }
+    }
+
+
+
     public void createCountry(Country newCountry) {
 
         String sql = "insert into country (country_code, nationality) values ('"+

@@ -2,8 +2,10 @@ package g7.upskill.ips.clients;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import g7.upskill.ips.LigacaoArtsy;
 import g7.upskill.ips.MyDBUtils;
 import g7.upskill.ips.model.Artist;
+import g7.upskill.ips.model.Partner;
 import g7.upskill.ips.persistence.DBStorage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,13 +16,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetAllApiArtists {
+public class GetAllApiPartners {
 
-    public static void searchAllArtist(String xappToken, String apiUrl) {
+    public static void searchAllPartners(String xappToken, String apiUrl, int id_gallerist, int id_Coordinator) {
 
         if (apiUrl.isBlank())
         {
-            apiUrl = "https://api.artsy.net/api/artists?artworks=true&size=1&page=1";
+            apiUrl = "https://api.artsy.net/api/partners";
         }
         OkHttpClient client = new OkHttpClient();
 
@@ -41,30 +43,24 @@ public class GetAllApiArtists {
                 String responseBody = response.body().string();
                 JsonParser parser = new JsonParser();
                 JsonObject jsonObject = (JsonObject)parser.parse(responseBody);
-                JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("artists");
+              //  JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("partners");
+                Object data = jsonObject.getAsJsonObject();
                 System.out.println("data " + data);
                 // Deserialize a list of genes
-                List<Artist>  artists = new ArrayList<>();
+                List<Partner> partners = new ArrayList<>();
                 Type listType = new TypeToken<ArrayList<Artist>>(){}.getType();
-                artists = gson.fromJson(data, listType);
+                partners = gson.fromJson(data, listType);
 
+                for (Partner partner : partners) {
 
-                for (Artist artist : artists) {
+                    partner.setRegion(MyDBUtils.cleanString(partner.getRegion()));
+                    partner.setName(MyDBUtils.cleanString(partner.getName()));
+                    partner.setWebsite(MyDBUtils.cleanString(partner.getWebsite()));
+                    partner.setUrl(MyDBUtils.cleanString(partner.getUrl()));
+                    partner.setId_gallerist(id_gallerist);
+                    partner.setId_coordinator(id_Coordinator);
 
-
-                    artist.setBiography(MyDBUtils.cleanString(artist.getBiography()));
-                    artist.setBirthyear(MyDBUtils.cleanString(artist.getBirthyear()));
-                    artist.setLocation(MyDBUtils.cleanString(artist.getLocation()));
-                    artist.setHometown(MyDBUtils.cleanString(artist.getHometown()));
-                    artist.setName(MyDBUtils.cleanString(artist.getName()));
-                    artist.setSlug(MyDBUtils.cleanString(artist.getSlug()));
-                    artist.setDeathyear(MyDBUtils.cleanString(artist.getDeathyear()));
-                    artist.setThumbnail(MyDBUtils.cleanString(artist.getThumbnail()));
-                    artist.setUrl(MyDBUtils.cleanString(artist.getUrl()));
-                    artist.setNationality(MyDBUtils.cleanString(artist.getNationality()));
-
-
-                    storage.createArtist(artist);
+                    storage.createPartner(partner);
 
 
                 }
@@ -81,7 +77,10 @@ public class GetAllApiArtists {
 
     public static void main(String[] args){
 
-     //   GetAllApiArtists.searchAllArtist();
+        String xappToken= LigacaoArtsy.generateXappToken();
+        GetAllApiPartners.searchAllPartners(xappToken,"https://api.artsy.net/api/partners/51cc9a88275b24f8700000db",1,2);
+
+
     }
 
 }

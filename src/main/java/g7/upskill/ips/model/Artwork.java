@@ -2,6 +2,8 @@ package g7.upskill.ips.model;
 
 
 
+import com.google.gson.annotations.SerializedName;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -12,19 +14,27 @@ public class Artwork {
     private String title;
 
 
-     private LocalDateTime created_at;
+    @SerializedName("_links")
+    private Links links;
+
+
+
+    public String getPartnersLink() {
+        return links.partner.href;
+    }
+
+    private LocalDateTime created_at;
     private LocalDateTime updated_at;
     private String thumbnail;
     private String url;
 
     private String date;
 
-
-
     private String category;
 
     private transient int id_Exhibition;
     private String id_Gene;
+
 
     public String getId() {
         return id;
@@ -121,4 +131,95 @@ public class Artwork {
                 ", id_Gene='" + id_Gene + '\'' +
                 '}';
     }
+
+
+
+
+    // Inner class representing the "_links" part of the JSON
+    public static class Links {
+        private Thumbnail thumbnail;
+        private Image image;
+        private Partner partner;
+        private Self self;
+        private Permalink permalink;
+        private Genes genes;
+        private Artists artists;
+        private SimilarArtworks similarArtworks;
+        private CollectionUsers collectionUsers;
+        private SaleArtworks saleArtworks;
+
+        // Inner class for "thumbnail" link
+        public static class Thumbnail {
+            private String href;
+
+            // Getter and setter
+        }
+
+        // Inner class for "image" link
+        public static class Image {
+            private String href;
+            private boolean templated;
+
+            // Getter and setter
+        }
+
+        // Inner class for "partner" link
+        public static class Partner {
+            private String href;
+
+            // Getter and setter
+        }
+
+        // Inner class for "self" link
+        public static class Self {
+            private String href;
+
+            // Getter and setter
+        }
+
+        // Inner class for "permalink" link
+        public static class Permalink {
+            private String href;
+
+            // Getter and setter
+        }
+
+        // Inner class for "genes" link
+        public static class Genes {
+            private String href;
+
+            // Getter and setter
+        }
+
+        // Inner class for "artists" link
+        public static class Artists {
+            private String href;
+
+            // Getter and setter
+        }
+
+        // Inner class for "similar_artworks" link
+        public static class SimilarArtworks {
+            private String href;
+
+            // Getter and setter
+        }
+
+        // Inner class for "collection_users" link
+        public static class CollectionUsers {
+            private String href;
+
+            // Getter and setter
+        }
+
+        // Inner class for "sale_artworks" link
+        public static class SaleArtworks {
+            private String href;
+
+            // Getter and setter
+        }
+
+        // Getters and setters for all links
+    }
+
 }
