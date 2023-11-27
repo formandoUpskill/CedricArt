@@ -1,26 +1,27 @@
 package g7.upskill.ips.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Exhibition {
-    private transient int id_Exhibition;
-    private LocalDate end_at;
-    private LocalDate start_at;
+    private String id;
+    private LocalDateTime end_at;
+    private LocalDateTime start_at;
     private String image;
     private String description;
     private String name;
     private String url;
-    private transient int id_Partner;
+    private String id_Partner;
 
-    public int getId_Exhibition() {
-        return id_Exhibition;
+    public String getId() {
+        return id;
     }
 
-    public LocalDate getEnd_at() {
+    public LocalDateTime getEnd_at() {
         return end_at;
     }
 
-    public LocalDate getStart_at() {
+    public LocalDateTime getStart_at() {
         return start_at;
     }
 
@@ -40,19 +41,19 @@ public class Exhibition {
         return url;
     }
 
-    public int getId_Partner() {
+    public String getId_Partner() {
         return id_Partner;
     }
 
-    public void setId_Exhibition(int id_Exhibition) {
-        this.id_Exhibition = id_Exhibition;
+    public void setId_Exhibition(String id) {
+        this.id = id;
     }
 
-    public void setEnd_at(LocalDate end_at) {
+    public void setEnd_at(LocalDateTime end_at) {
         this.end_at = end_at;
     }
 
-    public void setStart_at(LocalDate start_at) {
+    public void setStart_at(LocalDateTime start_at) {
         this.start_at = start_at;
     }
 
@@ -72,7 +73,7 @@ public class Exhibition {
         this.url = url;
     }
 
-    public void setId_Partner(int id_Partner) {
+    public void setId_Partner(String id_Partner) {
         this.id_Partner = id_Partner;
     }
 }

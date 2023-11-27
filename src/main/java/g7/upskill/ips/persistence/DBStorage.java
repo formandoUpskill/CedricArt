@@ -191,13 +191,14 @@ public class DBStorage {
 
     public void createExhibition(Exhibition newExhibition) {
 
-        String sql = "insert into exhibition (end_at, start_at, image, description, name, url) values ('"+
+        String sql = "insert into exhibition (id_Exhibition, end_at, start_at, image, description, name, id_Partner) values ('"+
+                newExhibition.getId() + "','" +
                 newExhibition.getEnd_at() + "','" +
                 newExhibition.getStart_at() + "','" +
                 newExhibition.getImage() + "','" +
                 newExhibition.getDescription() + "','" +
                 newExhibition.getName() + "','" +
-                newExhibition.getUrl() +
+                newExhibition.getId_Partner() +
                 "');";
 
         System.out.println("insert " + sql);

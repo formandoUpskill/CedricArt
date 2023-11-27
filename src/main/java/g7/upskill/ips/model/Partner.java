@@ -18,6 +18,10 @@ public class Partner {
         return links.website.href;
     }
 
+    public String getShowsLink() {
+        return links.shows.href;
+    }
+
     public String getId() {
         return id;
     }

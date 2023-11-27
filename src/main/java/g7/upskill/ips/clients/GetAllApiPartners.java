@@ -58,6 +58,10 @@ public class GetAllApiPartners {
 
                 storage.createPartner(partner);
 
+                // criar a exibitions desse partner
+                GetAllApiExhibition.searchAllExhibitions (xappToken, partner.getShowsLink(), partner.getId());
+
+
 
             } else {
                 System.out.println("Falha na solicitação à API. Código de resposta: " + response.code());
