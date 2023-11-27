@@ -123,8 +123,14 @@ CREATE TABLE Created_By
 );
 
 
-INSERT INTO User (Email,username,password) values ("gallerist@cedricArt.pt, user","gallerist", "password" );
-INSERT INTO User (Email,username,password) values ("coordinator@cedricArt.pt, user","coordinator", "password" );
+select * from User;
+INSERT INTO User (Email,username,password) values ('gallerist@cedricArt.pt', 'gallerist', 'password' );
+INSERT INTO User (Email,username,password) values ('coordinator@cedricArt.pt', 'coordinator', 'password' );
 
-insert into Gallerist (id_Gallerist,start_at) values (1, "2023-11-20");
-insert into Coordinator (id_Coordinator,start_at) values (2,"2023-11-21");
+insert into Gallerist (id_Gallerist,start_at) values (1, '2023-11-20');
+insert into Coordinator (id_Coordinator,start_at) values (2,'2023-11-21');
+
+
+
+
+

@@ -51,7 +51,12 @@ public class GetAllApiGenes {
                     gene.setDescription(MyDBUtils.cleanString(gene.getDescription()));
                     gene.setName(MyDBUtils.cleanString(gene.getName()));
 
-                    storage.createGene(gene);
+
+                   storage.createGene(gene);
+
+                    System.out.println( "artists " + gene.getArtistsLink());
+
+                    GetAllApiArtists.searchArtistById(gene.getArtistsLink());
 
                 }
 
