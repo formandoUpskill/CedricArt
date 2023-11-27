@@ -55,7 +55,7 @@ CREATE TABLE Partner
 (
   id_Partner CHAR(36) NOT NULL,
   region VARCHAR(250),
-  url VARCHAR(250),
+  email VARCHAR(250),
   name VARCHAR(250) NOT NULL,
   website VARCHAR(250),
   id_Gallerist INT NOT NULL,

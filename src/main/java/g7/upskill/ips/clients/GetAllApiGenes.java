@@ -63,12 +63,6 @@ public class GetAllApiGenes {
 
                    idGene= gene.getId();
 
-                    System.out.println( "artists " + gene.getArtistsLink());
-
-                    System.out.println( "artworks  " + gene.getArtworksLink());
-
-
-
                     GetAllApiArtists.searchAllArtist (xappToken, gene.getArtistsLink());
 
                     GetAllApiArtwork.searchAllArtworks(xappToken, gene.getArtworksLink(),idGene);

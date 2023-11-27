@@ -18,7 +18,7 @@ import java.util.List;
 
 public class GetAllApiPartners {
 
-    public static void searchAllPartners(String xappToken, String apiUrl, int id_gallerist, int id_Coordinator) {
+    public static void searchPartner(String xappToken, String apiUrl, int id_gallerist, int id_Coordinator) {
 
         if (apiUrl.isBlank())
         {
@@ -43,27 +43,21 @@ public class GetAllApiPartners {
                 String responseBody = response.body().string();
                 JsonParser parser = new JsonParser();
                 JsonObject jsonObject = (JsonObject)parser.parse(responseBody);
-              //  JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("partners");
-                Object data = jsonObject.getAsJsonObject();
-                System.out.println("data " + data);
-                // Deserialize a list of genes
-                List<Partner> partners = new ArrayList<>();
-                Type listType = new TypeToken<ArrayList<Artist>>(){}.getType();
-                partners = gson.fromJson(data, listType);
 
-                for (Partner partner : partners) {
+                String jsonString = jsonObject.toString();
 
-                    partner.setRegion(MyDBUtils.cleanString(partner.getRegion()));
-                    partner.setName(MyDBUtils.cleanString(partner.getName()));
-                    partner.setWebsite(MyDBUtils.cleanString(partner.getWebsite()));
-                    partner.setUrl(MyDBUtils.cleanString(partner.getUrl()));
-                    partner.setId_gallerist(id_gallerist);
-                    partner.setId_coordinator(id_Coordinator);
+                Partner partner = gson.fromJson(jsonString, Partner.class);
 
-                    storage.createPartner(partner);
+                partner.setRegion(MyDBUtils.cleanString(partner.getRegion()));
+                partner.setName(MyDBUtils.cleanString(partner.getName()));
+                partner.setWebsite(MyDBUtils.cleanString(partner.getWebsiteLink()));
+                partner.setEmail(MyDBUtils.cleanString(partner.getEmail()));
+                partner.setId_gallerist(id_gallerist);
+                partner.setId_coordinator(id_Coordinator);
 
 
-                }
+                storage.createPartner(partner);
+
 
             } else {
                 System.out.println("Falha na solicitação à API. Código de resposta: " + response.code());
@@ -78,7 +72,7 @@ public class GetAllApiPartners {
     public static void main(String[] args){
 
         String xappToken= LigacaoArtsy.generateXappToken();
-        GetAllApiPartners.searchAllPartners(xappToken,"https://api.artsy.net/api/partners/51cc9a88275b24f8700000db",1,2);
+        GetAllApiPartners.searchPartner(xappToken,"https://api.artsy.net/api/partners/51cc9a88275b24f8700000db",1,2);
 
 
     }

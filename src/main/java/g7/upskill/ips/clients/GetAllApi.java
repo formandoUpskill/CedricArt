@@ -5,7 +5,7 @@ import g7.upskill.ips.LigacaoArtsy;
 public class GetAllApi {
 
     public static void main(String[] args) {
-        boolean testMode= true;
+        boolean testMode= false;
 
         String xappToken= LigacaoArtsy.generateXappToken();
 

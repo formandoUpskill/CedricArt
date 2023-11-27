@@ -148,10 +148,10 @@ public class DBStorage {
 
 
 
-        String sqlInsert = "insert into Partner (id_Partner,region, url, name, website, id_Gallerist, id_Coordinator ) values ('"+
+        String sqlInsert = "insert into Partner (id_Partner,region, email, name, website, id_Gallerist, id_Coordinator ) values ('"+
                  newPartner.getId() + "','" +
                 newPartner.getRegion() + "','" +
-                newPartner.getUrl() + "','" +
+                newPartner.getEmail() + "','" +
                 newPartner.getName()+ "','" +
                 newPartner.getWebsite()+ "','" +
                 newPartner.getId_gallerist() + "','" +
