@@ -25,7 +25,7 @@ public class GetAllApiExhibition {
 
         if (!apiUrl.isEmpty())
         {
-            apiUrl = "https://api.artsy.net/api/exhibition?size=10";
+            apiUrl = "https://api.artsy.net/api/shows?size=10";
         }
 
         OkHttpClient client = new OkHttpClient();

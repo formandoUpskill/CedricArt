@@ -21,7 +21,7 @@ public class GetAllApiGenes {
     public static void searchAllGenes(String xappToken) {
 
 
-        String apiUrl = "https://api.artsy.net/api/genes?size=1060";
+        String apiUrl = "https://api.artsy.net/api/genes?size=10";
 
         OkHttpClient client = new OkHttpClient();
 
@@ -85,7 +85,7 @@ public class GetAllApiGenes {
 
         if (apiUrl.isBlank())
         {
-            apiUrl = "https://api.artsy.net/api/genes?size=1060";
+            apiUrl = "https://api.artsy.net/api/genes?size=10";
         }
 
         OkHttpClient client = new OkHttpClient();
@@ -135,20 +135,12 @@ public class GetAllApiGenes {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
 
 
 
     public static void main(String[] args) {
-/*
-        boolean testMode= true;
 
-        String xappToken= LigacaoArtsy.generateXappToken();
-        GetAllApiGenes.searchAllGenes(xappToken, testMode);
-    }
-    */
     }
 }
