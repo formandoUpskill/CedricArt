@@ -94,7 +94,7 @@ public class DBStorage {
                 MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD))
         {
 
-         ResultSet rs= MyDBUtils.lookup(connection, "*", "gene");
+         ResultSet rs= MyDBUtils.lookup(connection, "*", "Gene");
          while (rs.next())
          {
              gene= new Gene();
@@ -191,7 +191,7 @@ public class DBStorage {
 
     public void createExhibition(Exhibition newExhibition) {
 
-        String sql = "insert into exhibition (id_Exhibition, end_at, start_at, image, description, name, id_Partner) values ('"+
+        String sql = "insert into Exhibition (id_Exhibition, end_at, start_at, image, description, name, id_Partner) values ('"+
                 newExhibition.getId() + "','" +
                 newExhibition.getEnd_at() + "','" +
                 newExhibition.getStart_at() + "','" +

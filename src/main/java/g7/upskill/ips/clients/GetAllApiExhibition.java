@@ -23,7 +23,7 @@ public class GetAllApiExhibition {
 
     public static void searchAllExhibitions(String xappToken, String apiUrl,  String id_Partner) {
 
-        if (apiUrl.isBlank())
+        if (!apiUrl.isEmpty())
         {
             apiUrl = "https://api.artsy.net/api/exhibition?size=10";
         }

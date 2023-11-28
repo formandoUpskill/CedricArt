@@ -18,9 +18,9 @@ public class GetAllApiArtists {
 
     public static void searchAllArtist(String xappToken, String apiUrl) {
 
-        if (apiUrl.isBlank())
+        if (!apiUrl.isEmpty())
         {
-            apiUrl = "https://api.artsy.net/api/artists?artworks=true&size=1&page=1";
+            apiUrl = "https://api.artsy.net/api/artists?size=100";
         }
         OkHttpClient client = new OkHttpClient();
 

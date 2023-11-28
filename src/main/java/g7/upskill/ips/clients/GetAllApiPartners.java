@@ -20,9 +20,9 @@ public class GetAllApiPartners {
 
     public static void searchPartner(String xappToken, String apiUrl, int id_gallerist, int id_Coordinator) {
 
-        if (apiUrl.isBlank())
+        if (!apiUrl.isEmpty())
         {
-            apiUrl = "https://api.artsy.net/api/partners";
+            apiUrl = "https://api.artsy.net/api/partners?size=20";
         }
         OkHttpClient client = new OkHttpClient();
 

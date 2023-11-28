@@ -22,12 +22,12 @@ import java.util.List;
 
 public class GetAllApiArtwork {
 
-    public static void searchAllArtworks(String xappToken, String apiUrl,String idGene  ) {
+    public static void searchAllArtworks(String xappToken, String apiUrl,String idGene) {
 
 
-        if (apiUrl.isBlank())
+        if (!apiUrl.isEmpty())
         {
-            apiUrl = "https://api.artsy.net/api/artworks?size=1000";
+            apiUrl = "https://api.artsy.net/api/artworks?size=20";
         }
 
         OkHttpClient client = new OkHttpClient();

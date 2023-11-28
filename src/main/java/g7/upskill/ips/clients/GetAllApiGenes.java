@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import g7.upskill.ips.LigacaoArtsy;
 import g7.upskill.ips.MyDBUtils;
 import g7.upskill.ips.model.Gene;
+import g7.upskill.ips.model.Partner;
 import g7.upskill.ips.persistence.DBStorage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -17,14 +18,12 @@ import java.util.List;
 
 public class GetAllApiGenes {
 
-    public static void searchAllGenes(String xappToken, boolean isTestMode) {
+    public static void searchAllGenes(String xappToken) {
 
-        String apiUrl="https://api.artsy.net/api/genes?size=1060";
+
+        String apiUrl = "https://api.artsy.net/api/genes?size=1060";
 
         OkHttpClient client = new OkHttpClient();
-        if (isTestMode)
-           apiUrl = "https://api.artsy.net/api/genes?id=4d90d190dcdd5f44a5000032";
-
 
         String idGene="";
 
@@ -79,10 +78,69 @@ public class GetAllApiGenes {
 
     }
 
-    public void getAllGenesDB(){
+
+
+    public static void searchGeneById(String xappToken, String apiUrl) {
+
+
+        if (apiUrl.isBlank())
+        {
+            apiUrl = "https://api.artsy.net/api/genes?size=1060";
+        }
+
+        OkHttpClient client = new OkHttpClient();
+
+        String idGene="";
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        System.out.println(apiUrl);
+        System.out.println(apiUrl);
+        Request request = new Request.Builder()
+                .url(apiUrl)
+                .header("X-XAPP-Token", xappToken)
+                .build();
+
+
+        DBStorage storage = new DBStorage();
+
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                // Processar a resposta aqui conforme necessário
+                String responseBody = response.body().string();
+                JsonParser parser = new JsonParser();
+                JsonObject jsonObject = (JsonObject)parser.parse(responseBody);
+
+                String jsonString = jsonObject.toString();
+
+                Gene gene = gson.fromJson(jsonString, Gene.class);
+                // Deserialize a list of genes
+
+
+                    gene.setDescription(MyDBUtils.cleanString(gene.getDescription()));
+                    gene.setName(MyDBUtils.cleanString(gene.getName()));
+
+                    storage.createGene(gene);
+                    idGene= gene.getId();
+
+                    GetAllApiArtists.searchAllArtist (xappToken, gene.getArtistsLink());
+
+                     GetAllApiArtwork.searchAllArtworks(xappToken, gene.getArtworksLink(),idGene);
+
+
+
+            } else {
+                System.out.println("Falha na solicitação à API. Código de resposta: " + response.code());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }
+
+
+
 
     public static void main(String[] args) {
 /*
