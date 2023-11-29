@@ -1,6 +1,6 @@
 
 DROP Database if exists artsydb;
-
+ 
  create database artsydb;
 
 use  artsydb;
@@ -108,17 +108,28 @@ CREATE TABLE Artwork
   thumbnail VARCHAR(250) ,
   url VARCHAR(250),
   id_Exhibition CHAR(36),
-  id_Gene CHAR(36)  NOT NULL
+  PRIMARY KEY (id_Artwork),
+  FOREIGN KEY (id_Exhibition) REFERENCES Exhibition(id_Exhibition)
 );
 
-/*CREATE TABLE Created_By
+
+CREATE TABLE Artwork_Gene
+(
+  id_Gene CHAR(36) NOT NULL,
+  id_Artwork CHAR(36) NOT NULL,
+  PRIMARY KEY (id_Gene, id_Artwork),
+  FOREIGN KEY (id_Gene) REFERENCES Gene(id_Gene),
+  FOREIGN KEY (id_Artwork) REFERENCES Artwork(id_Artwork)
+);
+
+CREATE TABLE Created_By
 (
   id_Artist CHAR(36) NOT NULL,
   id_Artwork CHAR(36) NOT NULL,
   PRIMARY KEY (id_Artist, id_Artwork),
   FOREIGN KEY (id_Artist) REFERENCES Artist(id_Artist),
   FOREIGN KEY (id_Artwork) REFERENCES Artwork(id_Artwork)
-);*/
+);
 
 
 select * from User;
@@ -127,7 +138,6 @@ INSERT INTO User (Email,username,password) values ('coordinator@cedricArt.pt', '
 
 insert into Gallerist (id_Gallerist,start_at) values (1, '2023-11-20');
 insert into Coordinator (id_Coordinator,start_at) values (2,'2023-11-21');
-
 
 
 

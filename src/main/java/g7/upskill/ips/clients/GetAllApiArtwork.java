@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import g7.upskill.ips.LigacaoArtsy;
 import g7.upskill.ips.MyDBUtils;
 import g7.upskill.ips.adapters.LocalDateAdapter;
+import g7.upskill.ips.model.Artist;
 import g7.upskill.ips.model.Artwork;
 import g7.upskill.ips.model.Gene;
 import g7.upskill.ips.persistence.DBStorage;
@@ -22,17 +23,30 @@ import java.util.List;
 
 public class GetAllApiArtwork {
 
-    public static void searchAllArtworks(String xappToken, String apiUrl,String idGene) {
+
+    public static void searchAllArtworks_(String xappToken, String apiUrl,String idGene) {
+
+        System.out.println("searchAllArtworks searchAllArtworks " + apiUrl +"  dfdf" + idGene );
+
+    }
+
+    public static void searchAllArtworks(String xappToken, String apiUrl,String idGene, int size) {
 
 
-        if (!apiUrl.isEmpty())
+        if (apiUrl.isEmpty())
         {
             apiUrl = "https://api.artsy.net/api/artworks?size=20";
+            System.out.println("nnnnnn searchAllArtworks searchAllArtworks searchAllArtworks");
+        }
+        else
+        {
+            apiUrl= apiUrl + "&size="+ size;
+            System.out.println("apiUrl not isEmpty "  + apiUrl);
         }
 
         OkHttpClient client = new OkHttpClient();
 
-       Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter()).setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter()).setPrettyPrinting().create();
 
         System.out.println(apiUrl);
         Request request = new Request.Builder()
@@ -69,12 +83,17 @@ public class GetAllApiArtwork {
 
                     storage.createArtwork(artwork);
 
+                    // verificar a ligação entre obra de arte e artista
+                    linkArtworksToArtists( xappToken, artwork.getArtistsLink(), artwork,size);
+
                     // para cada artwork ir buscar o link da galeria
-                   GetAllApiPartners.searchPartner(xappToken,  artwork.getPartnersLink(),1, 2);
 
 
+                    GetAllApiPartners.searchPartner(xappToken, artwork.getPartnersLink(), 1, 2);
+                    // GetAllApiPartners.searchAllApiPartners(xappToken,  artwork.getPartnersLink(),1, 2, size);
 
                 }
+
 
             } else {
                 System.out.println("Falha na solicitação à API. Código de resposta: " + response.code());
@@ -87,9 +106,56 @@ public class GetAllApiArtwork {
     }
 
 
+    public static void linkArtworksToArtists(String xappToken, String apiUrl,Artwork artwork, int size) {
+
+
+        OkHttpClient client = new OkHttpClient();
+
+        Gson gson = new GsonBuilder().create();
+
+        System.out.println(apiUrl);
+        Request request = new Request.Builder()
+                .url(apiUrl)
+                .header("X-XAPP-Token", xappToken)
+                .build();
+
+
+        DBStorage storage = new DBStorage();
+
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                // Processar a resposta aqui conforme necessário
+                String responseBody = response.body().string();
+                JsonParser parser = new JsonParser();
+                JsonObject jsonObject = (JsonObject)parser.parse(responseBody);
+                JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("artists");
+                System.out.println("data " + data);
+                // Deserialize a list of genes
+                List<Artist>  artists = new ArrayList<>();
+                Type listType = new TypeToken<ArrayList<Artist>>(){}.getType();
+                artists = gson.fromJson(data, listType);
+
+
+                for (Artist artist : artists) {
+
+                    storage.insertArtworkArtist(artwork,artist);
+                }
+
+            } else {
+                System.out.println("Falha na solicitação à API. Código de resposta: " + response.code());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
     public static void main(String[] args){
 
-   //     GetAllApiArtwork.searchAllArtworks();
+        //     GetAllApiArtwork.searchAllArtworks();
     }
 
 

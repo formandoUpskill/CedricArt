@@ -16,11 +16,28 @@ import java.util.List;
 
 public class GetAllApiArtists {
 
-    public static void searchAllArtist(String xappToken, String apiUrl) {
 
-        if (!apiUrl.isEmpty())
+    public static void searchAllArtist_(String xappToken, String apiUrl) {
+
+        System.out.println("apiUrl apiUrl apiUrl" + apiUrl);
+    }
+
+
+
+    public static void searchAllArtist(String xappToken, String apiUrl, int size) {
+
+        System.out.println("apiUrl apiUrl apiUrl" + apiUrl);
+
+        if (apiUrl.isEmpty())
         {
             apiUrl = "https://api.artsy.net/api/artists?size=100";
+            System.out.println("+++++ searchAllArtist searchAllArtist searchAllArtist");
+        }
+
+        else
+        {
+            apiUrl= apiUrl + "&size="+ size;
+            System.out.println("apiUrl not isEmpty  searchAllArtist"  + apiUrl);
         }
         OkHttpClient client = new OkHttpClient();
 

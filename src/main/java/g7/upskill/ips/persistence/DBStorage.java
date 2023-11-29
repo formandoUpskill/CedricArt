@@ -16,10 +16,10 @@ public class DBStorage {
 
     public void createGene(Gene newGene) {
 
-       String sql = "insert into Gene (id_gene, name, description) values ('" +
-               newGene.getId()+ "','" +
-               newGene.getName() + "','" +
-               newGene.getDescription() + "');";
+        String sql = "insert into Gene (id_gene, name, description) values ('" +
+                newGene.getId()+ "','" +
+                newGene.getName() + "','" +
+                newGene.getDescription() + "');";
 
         System.out.println("insert " + sql);
 
@@ -60,6 +60,10 @@ public class DBStorage {
         }
     }
 
+
+
+
+
     private String getIdGene(String categoria)
     {
 
@@ -73,12 +77,12 @@ public class DBStorage {
 
             Id_Gene=  MyDBUtils.lookup(connection, "id_Gene", "Gene", "name='" + categoria +"'", default_Value);
 
-           return Id_Gene.toString();
+            return Id_Gene.toString();
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-       return default_Value;
+        return default_Value;
     }
 
 
@@ -94,16 +98,16 @@ public class DBStorage {
                 MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD))
         {
 
-         ResultSet rs= MyDBUtils.lookup(connection, "*", "Gene");
-         while (rs.next())
-         {
-             gene= new Gene();
-             gene.setId(rs.getString("id_Gene"));
-             gene.setName(rs.getString("name"));
-             gene.setDescription(rs.getString("description"));
+            ResultSet rs= MyDBUtils.lookup(connection, "*", "Gene");
+            while (rs.next())
+            {
+                gene= new Gene();
+                gene.setId(rs.getString("id_Gene"));
+                gene.setName(rs.getString("name"));
+                gene.setDescription(rs.getString("description"));
 
-             listGenes.add(gene);
-         }
+                listGenes.add(gene);
+            }
 
 
         } catch (SQLException e) {
@@ -114,32 +118,128 @@ public class DBStorage {
 
     }
 
-    public void createArtwork(Artwork newArtwork) {
 
 
-      String id_gene= getIdGene(newArtwork.getCategory());
+    public void insertArtworkArtist(Artwork artwork, Artist artist)
+    {
+
+        if (artworkExists(artwork) && artistExists(artist))
+        {
+            String sqlInsert = "insert into Created_By (id_Artwork, id_Artist) values ('" +
+                    artwork.getId() + "','" +
+                    artist.getId() +
+                    "');";
+
+            System.out.println("insert into Created_By (id_Artwork, id_Artist)  " + sqlInsert);
+
+            try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                    MyDBUtils.DB_SERVER, MyDBUtils.DB_PORT, MyDBUtils.DB_NAME, MyDBUtils.DB_USER, MyDBUtils.DB_PWD);) {
+                MyDBUtils.exec_sql(connection, sqlInsert);
+            } catch (SQLException e) {
+                System.out.println("exec_sql:" + sqlInsert + " Error: " + e.getMessage());
+            }
+
+        }
 
 
-        String sqlInsert = "insert into Artwork (id_Artwork, title, created_at, updated_at, date, thumbnail, url, id_Gene) values ('"+
-                newArtwork.getId() + "','" +
-                newArtwork.getTitle() + "','" +
-                newArtwork.getCreated_at() + "','" +
-                newArtwork.getUpdated_at()+ "','" +
-                newArtwork.getDate()+ "','" +
-                newArtwork.getThumbnail() + "','" +
-                newArtwork.getUrl() + "','" +
-                newArtwork.getId_Gene() +
-                "');";
+    }
 
-        System.out.println("insert " + sqlInsert);
+
+    private boolean artistExists(Artist artist)
+    {
+        boolean exists= false;
+
+        String where= "id_Artist='" + artist.getId()+"'";
+
+        System.out.println("artistExists artistExists artistExists" + where );
 
         try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
                 MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
 
-            MyDBUtils.exec_sql(connection,sqlInsert);
+            exists= MyDBUtils.exist(connection,"Artist", where );
+
+        } catch (SQLException e) {
+            System.out.println("exec_sql:" + where+ " Error: " + e.getMessage());
+        }
+
+        return exists;
+    }
+
+    private boolean artworkExists(Artwork newArtwork)
+    {
+        boolean exists= false;
+
+        String where= "id_Artwork='" + newArtwork.getId()+"'";
+
+        System.out.println("artworkExists artworkExists artworkExists" + where );
+
+        try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
+
+            exists= MyDBUtils.exist(connection,"Artwork", where );
+
+        } catch (SQLException e) {
+            System.out.println("exec_sql:" + where+ " Error: " + e.getMessage());
+        }
+
+        return exists;
+    }
+
+
+    private void insertArtworkGene(Artwork newArtwork)
+    {
+        String sqlInsert = "insert into Artwork_Gene (id_Artwork, id_Gene) values ('"+
+                newArtwork.getId() + "','" +
+                newArtwork.getId_Gene() +
+                "');";
+
+        System.out.println("insert into Artwork_Gene (id_Artwork, id_Gene)  " + sqlInsert);
+
+        try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER, MyDBUtils.DB_PORT, MyDBUtils.DB_NAME, MyDBUtils.DB_USER, MyDBUtils.DB_PWD);) {
+            MyDBUtils.exec_sql(connection, sqlInsert);
         } catch (SQLException e) {
             System.out.println("exec_sql:" + sqlInsert + " Error: " + e.getMessage());
         }
+
+    }
+
+    public void createArtwork(Artwork newArtwork) {
+
+        // String id_gene= getIdGene(newArtwork.getCategory());
+
+
+        if (artworkExists(newArtwork))
+        {
+            insertArtworkGene(newArtwork);
+        }
+        else {
+            {
+                String sqlInsert = "insert into Artwork (id_Artwork, title, created_at, updated_at, date, thumbnail, url) values ('" +
+                        newArtwork.getId() + "','" +
+                        newArtwork.getTitle() + "','" +
+                        newArtwork.getCreated_at() + "','" +
+                        newArtwork.getUpdated_at() + "','" +
+                        newArtwork.getDate() + "','" +
+                        newArtwork.getThumbnail() + "','" +
+                        newArtwork.getUrl() +
+                        "');";
+
+                System.out.println("insert into Artwork (id_Artwork, title, created_at, updated_at, date, thumbnail, url) " + sqlInsert);
+
+                try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                        MyDBUtils.DB_SERVER, MyDBUtils.DB_PORT, MyDBUtils.DB_NAME, MyDBUtils.DB_USER, MyDBUtils.DB_PWD);) {
+                    MyDBUtils.exec_sql(connection, sqlInsert);
+                } catch (SQLException e) {
+                    System.out.println("exec_sql:" + sqlInsert + " Error: " + e.getMessage());
+                }
+
+                // E inserir na
+                insertArtworkGene(newArtwork);
+
+            }
+        }
+
     }
 
 
@@ -149,7 +249,7 @@ public class DBStorage {
 
 
         String sqlInsert = "insert into Partner (id_Partner,region, email, name, website, id_Gallerist, id_Coordinator ) values ('"+
-                 newPartner.getId() + "','" +
+                newPartner.getId() + "','" +
                 newPartner.getRegion() + "','" +
                 newPartner.getEmail() + "','" +
                 newPartner.getName()+ "','" +

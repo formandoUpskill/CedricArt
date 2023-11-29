@@ -15,6 +15,8 @@ public class Partner {
     private Links links;
 
     public String getWebsiteLink() {
+
+        System.out.println("getWebsiteLink " + links.website.href);
         return links.website.href;
     }
 

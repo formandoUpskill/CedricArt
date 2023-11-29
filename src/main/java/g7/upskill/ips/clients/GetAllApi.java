@@ -8,6 +8,6 @@ public class GetAllApi {
 
         String xappToken= LigacaoArtsy.generateXappToken();
 
-            GetAllApiGenes.searchAllGenes(xappToken);
+        GetAllApiGenes.searchAllGenes(xappToken, 1060);
     }
 }

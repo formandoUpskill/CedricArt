@@ -18,10 +18,10 @@ import java.util.List;
 
 public class GetAllApiGenes {
 
-    public static void searchAllGenes(String xappToken) {
+    public static void searchAllGenes(String xappToken, int size) {
 
 
-        String apiUrl = "https://api.artsy.net/api/genes?size=10";
+        String apiUrl = "https://api.artsy.net/api/genes?size=" + size;
 
         OkHttpClient client = new OkHttpClient();
 
@@ -58,13 +58,13 @@ public class GetAllApiGenes {
                     gene.setName(MyDBUtils.cleanString(gene.getName()));
 
 
-                   storage.createGene(gene);
+                    storage.createGene(gene);
 
-                   idGene= gene.getId();
+                    idGene= gene.getId();
 
-                    GetAllApiArtists.searchAllArtist (xappToken, gene.getArtistsLink());
+                    GetAllApiArtists.searchAllArtist (xappToken, gene.getArtistsLink(),10);
 
-                    GetAllApiArtwork.searchAllArtworks(xappToken, gene.getArtworksLink(),idGene);
+                    GetAllApiArtwork.searchAllArtworks(xappToken, gene.getArtworksLink(),idGene,10);
 
                 }
 
@@ -117,15 +117,15 @@ public class GetAllApiGenes {
                 // Deserialize a list of genes
 
 
-                    gene.setDescription(MyDBUtils.cleanString(gene.getDescription()));
-                    gene.setName(MyDBUtils.cleanString(gene.getName()));
+                gene.setDescription(MyDBUtils.cleanString(gene.getDescription()));
+                gene.setName(MyDBUtils.cleanString(gene.getName()));
 
-                    storage.createGene(gene);
-                    idGene= gene.getId();
+                storage.createGene(gene);
+                idGene= gene.getId();
 
-                    GetAllApiArtists.searchAllArtist (xappToken, gene.getArtistsLink());
+                GetAllApiArtists.searchAllArtist (xappToken, gene.getArtistsLink(),20);
 
-                     GetAllApiArtwork.searchAllArtworks(xappToken, gene.getArtworksLink(),idGene);
+                GetAllApiArtwork.searchAllArtworks(xappToken, gene.getArtworksLink(),idGene,30);
 
 
 
