@@ -23,20 +23,12 @@ import java.util.List;
 
 public class GetAllApiArtwork {
 
-
-    public static void searchAllArtworks_(String xappToken, String apiUrl,String idGene) {
-
-        System.out.println("searchAllArtworks searchAllArtworks " + apiUrl +"  dfdf" + idGene );
-
-    }
-
     public static void searchAllArtworks(String xappToken, String apiUrl,String idGene, int size) {
 
 
         if (apiUrl.isEmpty())
         {
             apiUrl = "https://api.artsy.net/api/artworks?size=20";
-            System.out.println("nnnnnn searchAllArtworks searchAllArtworks searchAllArtworks");
         }
         else
         {

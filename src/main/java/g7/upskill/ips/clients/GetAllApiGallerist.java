@@ -60,8 +60,6 @@ public class GetAllApiGallerist {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public static void main(String[] args){

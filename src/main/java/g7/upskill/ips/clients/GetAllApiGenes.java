@@ -74,8 +74,6 @@ public class GetAllApiGenes {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
 
