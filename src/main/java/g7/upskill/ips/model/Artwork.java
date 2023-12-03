@@ -20,6 +20,8 @@ public class Artwork {
 
 
     public String getPartnersLink() {
+        if(links.partner==null)
+            return null;
         return links.partner.href;
     }
 
@@ -29,7 +31,6 @@ public class Artwork {
     }
 
     public String getGenesLink() {
-        System.out.println("Artwork getGenesLink " + links.genes.href);
         return links.genes.href;
     }
 
@@ -42,8 +43,7 @@ public class Artwork {
 
     private String category;
 
-    private transient int id_Exhibition;
-    private String id_Gene;
+    private String id_Exhibition;
 
 
     public String getId() {
@@ -63,20 +63,21 @@ public class Artwork {
     }
 
     public String getThumbnail() {
-        return thumbnail;
+
+        if (links.thumbnail== null)
+            return null;
+        return links.thumbnail.href;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public int getId_Exhibition() {
+    public String getId_Exhibition() {
         return id_Exhibition;
     }
 
-    public String getId_Gene() {
-        return id_Gene;
-    }
+
 
     public void setId (String id_Artwork) {
         this.id = id;
@@ -106,13 +107,10 @@ public class Artwork {
         this.url = url;
     }
 
-    public void setId_Exhibition(int id_Exhibition) {
+    public void setId_Exhibition(String id_Exhibition) {
         this.id_Exhibition = id_Exhibition;
     }
 
-    public void setId_Gene(String id_Gene) {
-        this.id_Gene = id_Gene;
-    }
 
     public String getDate() {
         return date;
@@ -131,18 +129,16 @@ public class Artwork {
         return "Artwork{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
+                ", links=" + links +
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
                 ", thumbnail='" + thumbnail + '\'' +
                 ", url='" + url + '\'' +
                 ", date='" + date + '\'' +
                 ", category='" + category + '\'' +
-                ", id_Exhibition=" + id_Exhibition +
-                ", id_Gene='" + id_Gene + '\'' +
+                ", id_Exhibition='" + id_Exhibition + '\'' +
                 '}';
     }
-
-
 
 
     // Inner class representing the "_links" part of the JSON

@@ -1,17 +1,20 @@
 package g7.upskill.ips.model;
 
-import java.time.LocalDate;
+import com.google.gson.annotations.SerializedName;
+
 import java.time.LocalDateTime;
 
 public class Exhibition {
     private String id;
     private LocalDateTime end_at;
     private LocalDateTime start_at;
-    private String image;
+    private String thumbnail;
     private String description;
     private String name;
     private String url;
     private String id_Partner;
+
+    private String status;
 
     public String getId() {
         return id;
@@ -25,8 +28,14 @@ public class Exhibition {
         return start_at;
     }
 
-    public String getImage() {
-        return image;
+    public String getThumbnail() {
+        if (links.thumbnail== null)
+            return null;
+        return links.thumbnail.href;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public String getDescription() {
@@ -57,8 +66,8 @@ public class Exhibition {
         this.start_at = start_at;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public void setDescription(String description) {
@@ -75,5 +84,71 @@ public class Exhibition {
 
     public void setId_Partner(String id_Partner) {
         this.id_Partner = id_Partner;
+    }
+
+
+    @SerializedName("_links")
+    private Links links;
+
+    public static class Links {
+        private Thumbnail thumbnail;
+        private Image image;
+        private Self self;
+        private Permalink permalink;
+        private Partner partner;
+        private Artworks artworks;
+        private Images images;
+
+        // Inner class for "thumbnail" link
+        public static class Thumbnail {
+            private String href;
+
+            // Getter and setter
+        }
+
+        // Inner class for "image" link
+        public static class Image {
+            private String href;
+            private boolean templated;
+
+            // Getter and setter
+        }
+
+        // Inner class for "self" link
+        public static class Self {
+            private String href;
+
+            // Getter and setter
+        }
+
+        // Inner class for "permalink" link
+        public static class Permalink {
+            private String href;
+
+            // Getter and setter
+        }
+
+        // Inner class for "partner" link
+        public static class Partner {
+            private String href;
+
+            // Getter and setter
+        }
+
+        // Inner class for "artworks" link
+        public static class Artworks {
+            private String href;
+
+            // Getter and setter
+        }
+
+        // Inner class for "images" link
+        public static class Images {
+            private String href;
+
+            // Getter and setter
+        }
+
+        // Getters and setters for all links
     }
 }

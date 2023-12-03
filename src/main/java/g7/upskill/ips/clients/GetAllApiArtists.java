@@ -2,6 +2,7 @@ package g7.upskill.ips.clients;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import g7.upskill.ips.LigacaoArtsy;
 import g7.upskill.ips.MyDBUtils;
 import g7.upskill.ips.model.Artist;
 import g7.upskill.ips.persistence.DBStorage;
@@ -16,79 +17,97 @@ import java.util.List;
 
 public class GetAllApiArtists {
 
-    public static void searchAllArtist(String xappToken, String apiUrl, int size) {
 
-        System.out.println("apiUrl apiUrl apiUrl" + apiUrl);
 
-        if (apiUrl.isEmpty())
-        {
-            apiUrl = "https://api.artsy.net/api/artists?size=100";
-        }
+    public static String getAllArtistsIdWithArtworks(String apiUrl,String xappToken, List<Artist> artistsList) {
 
-        else
-        {
-            apiUrl= apiUrl + "&size="+ size;
-            System.out.println("apiUrl not isEmpty  searchAllArtist"  + apiUrl);
-        }
-        OkHttpClient client = new OkHttpClient();
+
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        System.out.println(apiUrl);
+            System.out.println(apiUrl);
 
-        Request request = new Request.Builder()
-                .url(apiUrl)
-                .header("X-XAPP-Token", xappToken)
-                .build();
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(apiUrl)
+                    .header("X-XAPP-Token", xappToken)
+                    .build();
 
-        DBStorage storage = new DBStorage();
+            try {
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    // Processar a resposta aqui conforme necessário
+                    String responseBody = response.body().string();
+                    JsonParser parser = new JsonParser();
+                    JsonObject jsonObject = (JsonObject) parser.parse(responseBody);
 
-        try {
-            Response response = client.newCall(request).execute();
-            if (response.isSuccessful()) {
-                // Processar a resposta aqui conforme necessário
-                String responseBody = response.body().string();
-                JsonParser parser = new JsonParser();
-                JsonObject jsonObject = (JsonObject)parser.parse(responseBody);
-                JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("artists");
-                System.out.println("data " + data);
-                // Deserialize a list of genes
-                List<Artist>  artists = new ArrayList<>();
-                Type listType = new TypeToken<ArrayList<Artist>>(){}.getType();
-                artists = gson.fromJson(data, listType);
+                   // int totalCount = jsonObject.get("total_count").getAsInt();
 
+                    try {
+                        apiUrl = jsonObject.getAsJsonObject("_links").getAsJsonObject("next").get("href").getAsString();
+                    }
+                    catch(NullPointerException ex)
+                    {
+                        apiUrl="";
+                    }
 
-                for (Artist artist : artists) {
+                    JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("artists");
 
-
-                    artist.setBiography(MyDBUtils.cleanString(artist.getBiography()));
-                    artist.setBirthyear(MyDBUtils.cleanString(artist.getBirthyear()));
-                    artist.setLocation(MyDBUtils.cleanString(artist.getLocation()));
-                    artist.setHometown(MyDBUtils.cleanString(artist.getHometown()));
-                    artist.setName(MyDBUtils.cleanString(artist.getName()));
-                    artist.setSlug(MyDBUtils.cleanString(artist.getSlug()));
-                    artist.setDeathyear(MyDBUtils.cleanString(artist.getDeathyear()));
-                    artist.setThumbnail(MyDBUtils.cleanString(artist.getThumbnail()));
-                    artist.setUrl(MyDBUtils.cleanString(artist.getUrl()));
-                    artist.setNationality(MyDBUtils.cleanString(artist.getNationality()));
+                    List<Artist>  artists = new ArrayList<>();
+                    Type listType = new TypeToken<ArrayList<Artist>>(){}.getType();
+                    artists = gson.fromJson(data, listType);
 
 
-                    storage.createArtist(artist);
+                    for (Artist artist : artists) {
 
 
+                        artist.setBiography(MyDBUtils.cleanString(artist.getBiography()));
+                        artist.setBirthyear(MyDBUtils.cleanString(artist.getBirthyear()));
+                        artist.setLocation(MyDBUtils.cleanString(artist.getLocation()));
+                        artist.setHometown(MyDBUtils.cleanString(artist.getHometown()));
+                        artist.setName(MyDBUtils.cleanString(artist.getName()));
+                        artist.setSlug(MyDBUtils.cleanString(artist.getSlug()));
+                        artist.setDeathyear(MyDBUtils.cleanString(artist.getDeathyear()));
+                        artist.setThumbnail(MyDBUtils.cleanString(artist.getThumbnail()));
+                        artist.setUrl(MyDBUtils.cleanString(artist.getUrl()));
+                        artist.setNationality(MyDBUtils.cleanString(artist.getNationality()));
+
+                        artistsList.add(artist);
+
+                    }
+
+
+                } else {
+                    System.out.println("Falha na solicitação à API. Código de resposta: " + response.code());
                 }
-
-            } else {
-                System.out.println("Falha na solicitação à API. Código de resposta: " + response.code());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
+            return apiUrl;
+    }
 
 
     public static void main(String[] args){
 
-    }
+        List<Artist> artistsList = new ArrayList<>();
 
+        String xappToken= LigacaoArtsy.generateXappToken();
+
+        String apiUrl="";
+        int i=0;
+
+        do {
+            apiUrl= getAllArtistsIdWithArtworks(apiUrl, xappToken, artistsList);
+            i++;
+
+            System.out.println(i +  ":" + apiUrl);
+        }
+        while (!apiUrl.isBlank());
+
+        for (Artist artist : artistsList) {
+            System.out.println(artist.getArtworksLink());
+        }
+
+
+    }
 }

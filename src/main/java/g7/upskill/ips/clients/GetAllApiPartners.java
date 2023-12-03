@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import g7.upskill.ips.LigacaoArtsy;
 import g7.upskill.ips.MyDBUtils;
 import g7.upskill.ips.model.Artist;
+import g7.upskill.ips.model.Artwork;
 import g7.upskill.ips.model.Partner;
 import g7.upskill.ips.persistence.DBStorage;
 import okhttp3.OkHttpClient;
@@ -18,12 +19,10 @@ import java.util.List;
 
 public class GetAllApiPartners {
 
-    public static void searchPartner(String xappToken, String apiUrl, int id_gallerist, int id_Coordinator) {
+    public static Partner searchPartner( String apiUrl, String xappToken, int id_gallerist, int id_Coordinator) {
 
-        if (apiUrl.isBlank())
-        {
-            apiUrl = "https://api.artsy.net/api/partners";
-        }
+        Partner partner= new Partner();
+
         OkHttpClient client = new OkHttpClient();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -46,7 +45,7 @@ public class GetAllApiPartners {
 
                 String jsonString = jsonObject.toString();
 
-                Partner partner = gson.fromJson(jsonString, Partner.class);
+                partner = gson.fromJson(jsonString, Partner.class);
 
                 partner.setRegion(MyDBUtils.cleanString(partner.getRegion()));
                 partner.setName(MyDBUtils.cleanString(partner.getName()));
@@ -56,10 +55,6 @@ public class GetAllApiPartners {
                 partner.setId_coordinator(id_Coordinator);
 
 
-                storage.createPartner(partner);
-
-                // criar a exibitions desse partner
-                GetAllApiExhibition.searchAllExhibitions (xappToken, partner.getShowsLink(), partner.getId());
 
 
 
@@ -69,6 +64,8 @@ public class GetAllApiPartners {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return partner;
     }
 
 
@@ -76,7 +73,7 @@ public class GetAllApiPartners {
     public static void main(String[] args){
 
         String xappToken= LigacaoArtsy.generateXappToken();
-        GetAllApiPartners.searchPartner(xappToken,"https://api.artsy.net/api/partners/51cc9a88275b24f8700000db",1,2);
+    //    GetAllApiPartners.searchPartner(xappToken,"https://api.artsy.net/api/partners/51cc9a88275b24f8700000db",1,2);
 
 
     }

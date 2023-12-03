@@ -58,7 +58,9 @@ public class Artist {
     }
 
     public String getThumbnail() {
-        return thumbnail;
+        if (links.thumbnail== null)
+            return null;
+        return links.thumbnail.href;
     }
 
     public String getUrl() {
