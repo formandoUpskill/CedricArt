@@ -10,9 +10,9 @@ import java.util.List;
 public class GetAllApi {
 
 
-    public static void loadAllGenes(){
+    public static void loadAllGenes() {
 
-        String xappToken= LigacaoArtsy.generateXappToken();
+        String xappToken = LigacaoArtsy.generateXappToken();
 
         String apiUrl = "https://api.artsy.net/api/genes?size=100&total_count=true";
 
@@ -20,7 +20,7 @@ public class GetAllApi {
         List<Gene> geneList = new ArrayList<>();
 
         do {
-            apiUrl= GetAllApiGenes.getAllGenes(apiUrl,xappToken,geneList);
+            apiUrl = GetAllApiGenes.getAllGenes(apiUrl, xappToken, geneList);
 
         }
         while (!apiUrl.isBlank());
@@ -29,14 +29,12 @@ public class GetAllApi {
 
         for (Gene gene : geneList) {
             // inserir esse artista na base de dados
-          storage.createGene(gene);
+            storage.createGene(gene);
         }
     }
 
 
-
-    public static void loadAllArtistsIdWithArtworks()
-    {
+    public static void loadAllArtistsArworksPartnersExhibitions() {
         DBStorage storage = new DBStorage();
         List<Artist> artistsList = new ArrayList<>();
         List<Artwork> artworksList = new ArrayList<>();
@@ -44,49 +42,47 @@ public class GetAllApi {
         List<Exhibition> exhibitionList = new ArrayList<>();
 
 
-        String xappToken= LigacaoArtsy.generateXappToken();
+        String xappToken = LigacaoArtsy.generateXappToken();
 
-        String apiUrl="";
+        String apiUrl = "";
 
         // Obter todos os artistas com obras de arte
-        apiUrl= "https://api.artsy.net/api/artists?artworks=true&size=100&total_count=true";
+        apiUrl = "https://api.artsy.net/api/artists?artworks=true&size=100&total_count=true";
         do {
-            apiUrl= GetAllApiArtists.getAllArtistsIdWithArtworks(apiUrl, xappToken, artistsList);
+            apiUrl = GetAllApiArtists.getAllArtistsIdWithArtworks(apiUrl, xappToken, artistsList);
 
         }
         while (!apiUrl.isBlank());
 
 
-        System.out.println("Numero total de artistas com obras de arte: " + artistsList.size());
-
         for (Artist artist : artistsList) {
             // inserir esse artista na base de dados
-           storage.createArtist(artist);
+            storage.createArtist(artist);
 
 
             // obter a lista de obras de arte desse artista
             artworksList = new ArrayList<>();
-            apiUrl =  artist.getArtworksLink()+"&total_count=true";
+            apiUrl = artist.getArtworksLink() + "&total_count=true";
 
-            apiUrl= GetAllApiArtwork.getAllArtworksOfAnArtist(apiUrl,xappToken,artworksList);
+            apiUrl = GetAllApiArtwork.getAllArtworksOfAnArtist(apiUrl, xappToken, artworksList);
 
             for (Artwork artwork : artworksList) {
                 // Obter a lista de genes dessa obra
                 geneList = new ArrayList<>();
-                apiUrl =  artwork.getGenesLink()+"&total_count=true";
+                apiUrl = artwork.getGenesLink() + "&total_count=true";
                 do {
-                    apiUrl= GetAllApiGenes.getAllGenes(apiUrl,xappToken,geneList);
+                    apiUrl = GetAllApiGenes.getAllGenes(apiUrl, xappToken, geneList);
 
                 }
                 while (!apiUrl.isBlank());
 
                 // inserir essa obra de arte na base de dados
-                 storage.createArtwork(artwork,geneList, artist);
+                storage.createArtwork(artwork, geneList, artist);
 
-                 // ir buscar o partner que tem essa obra de arte
+                // ir buscar o partner que tem essa obra de arte
 
-                apiUrl= artwork.getPartnersLink();
-                if (apiUrl!=null) {
+                apiUrl = artwork.getPartnersLink();
+                if (apiUrl != null) {
                     Partner partner = GetAllApiPartners.searchPartner(apiUrl, xappToken, 1, 2);
 
                     storage.createPartner(partner, artwork);
@@ -96,7 +92,6 @@ public class GetAllApi {
                     apiUrl = partner.getShowsLink() + "&total_count=true";
 
 
-                    System.out.println("partner.getShowsLink() " + apiUrl);
                     exhibitionList = new ArrayList<>();
                     do {
                         apiUrl = GetAllApiExhibition.searchAllExhibitions(apiUrl, xappToken, exhibitionList);
@@ -106,26 +101,19 @@ public class GetAllApi {
 
                     for (Exhibition exhibition : exhibitionList) {
                         // Inserir o show na tabela exibibion e levar o id_partner (fk)
-                        storage.createExhibition(exhibition, partner,artwork);
+                        storage.createExhibition(exhibition, partner, artwork);
                     }
                 }
             }
-            // ainda falta conectar a exibition às obreas de arte
-        }
 
+        }
 
 
     }
 
 
-
     public static void main(String[] args) {
 
-        // inserir todos os genes na base de dados
-        loadAllGenes();
-
-        // Inserir os restantes elementos nas respectivas tabelas
-        loadAllArtistsIdWithArtworks();
 
 
     }

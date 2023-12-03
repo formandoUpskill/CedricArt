@@ -46,7 +46,6 @@ public class GetAllApiArtwork {
                 JsonParser parser = new JsonParser();
                 JsonObject jsonObject = (JsonObject) parser.parse(responseBody);
 
-                // int totalCount = jsonObject.get("total_count").getAsInt();
 
                 try {
                     apiUrl = jsonObject.getAsJsonObject("_links").getAsJsonObject("next").get("href").getAsString();
@@ -58,7 +57,7 @@ public class GetAllApiArtwork {
 
                 JsonArray data = jsonObject.getAsJsonObject("_embedded").getAsJsonArray("artworks");
 
-                System.out.println("data " + data);
+
                 // Deserialize a list of genes
                 List<Artwork>  artworks = new ArrayList<>();
                 Type listType = new TypeToken<ArrayList<Artwork>>(){}.getType();

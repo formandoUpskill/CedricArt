@@ -54,10 +54,6 @@ public class GetAllApiPartners {
                 partner.setId_gallerist(id_gallerist);
                 partner.setId_coordinator(id_Coordinator);
 
-
-
-
-
             } else {
                 System.out.println("Falha na solicitação à API. Código de resposta: " + response.code());
             }
@@ -71,9 +67,6 @@ public class GetAllApiPartners {
 
 
     public static void main(String[] args){
-
-        String xappToken= LigacaoArtsy.generateXappToken();
-    //    GetAllApiPartners.searchPartner(xappToken,"https://api.artsy.net/api/partners/51cc9a88275b24f8700000db",1,2);
 
 
     }

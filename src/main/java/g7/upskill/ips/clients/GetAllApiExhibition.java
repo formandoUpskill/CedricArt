@@ -19,8 +19,7 @@ import java.util.List;
 
 public class GetAllApiExhibition {
 
-    public static String searchAllExhibitions( String apiUrl,String xappToken, List exhibitionList) {
-
+    public static String searchAllExhibitions(String apiUrl, String xappToken, List exhibitionList) {
 
 
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter()).setPrettyPrinting().create();
@@ -41,7 +40,6 @@ public class GetAllApiExhibition {
                 JsonParser parser = new JsonParser();
                 JsonObject jsonObject = (JsonObject) parser.parse(responseBody);
 
-                // int totalCount = jsonObject.get("total_count").getAsInt();
 
                 try {
                     apiUrl = jsonObject.getAsJsonObject("_links").getAsJsonObject("next").get("href").getAsString();
@@ -55,7 +53,7 @@ public class GetAllApiExhibition {
                 Type listType = new TypeToken<ArrayList<Exhibition>>() {
                 }.getType();
                 exhibitions = gson.fromJson(data, listType);
-                System.out.println(exhibitions.size());
+
 
                 for (Exhibition exhibition : exhibitions) {
 
@@ -68,22 +66,17 @@ public class GetAllApiExhibition {
 
                 }
 
-            }else {
-                    System.out.println("Falha na solicitação à API. Código de resposta: " + response.code());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } else {
+                System.out.println("Falha na solicitação à API. Código de resposta: " + response.code());
             }
-
-            return apiUrl;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-    public static void main(String[] args){
+        return apiUrl;
+    }
 
-        boolean testMode= true;
-
-        String xappToken= LigacaoArtsy.generateXappToken();
-       // GetAllApiExhibition.searchAllExhibitions(xappToken,"https://api.artsy.net/api/shows?partner_id=51cc9a88275b24f8700000db","51cc9a88275b24f8700000db");
+    public static void main(String[] args) {
 
 
     }
