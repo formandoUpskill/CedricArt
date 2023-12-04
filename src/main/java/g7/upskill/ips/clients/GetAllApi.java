@@ -6,11 +6,16 @@ import g7.upskill.ips.persistence.DBStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class GetAllApi {
 
 
+    Properties config;
+
     public static void loadAllGenes() {
+
+        new LigacaoArtsy();
 
         String xappToken = LigacaoArtsy.generateXappToken();
 

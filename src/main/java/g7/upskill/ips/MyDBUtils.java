@@ -1,16 +1,39 @@
 package g7.upskill.ips;
 
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
+import java.util.Properties;
 import java.util.StringTokenizer;
 
 public class MyDBUtils {
 
-    public static final String DB_SERVER = "localhost";
-    public static final String DB_PORT = "3306";
-    public static final String DB_NAME = "artsydb";
-    public static final String DB_USER = "root";
-    public static final String DB_PWD = "123";
+    public static  String DB_SERVER;
+    public static  String DB_PORT;
+    public static  String DB_NAME;
+
+    public static String DB_USER;
+    public static String DB_PWD;
+
+    Properties config;
+    public MyDBUtils()
+    {
+        try {
+            this.config= new Properties();
+            FileReader file = new FileReader("CedricArt.config");
+            config.load(file);
+            DB_SERVER = this.config.getProperty("DB_SERVER");
+            DB_PORT = this.config.getProperty("DB_PORT");
+            DB_NAME  = this.config.getProperty("DB_NAME");
+            DB_PWD = this.config.getProperty("DB_PWD");
+            DB_USER = this.config.getProperty("DB_USER");
+
+            file.close();
+        } catch (IOException e) {
+            System.out.println("Config file not found "+  e.getMessage());
+        }
+    }
 
 
 

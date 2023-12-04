@@ -11,6 +11,11 @@ import java.util.List;
 
 public class DBStorage {
 
+    public DBStorage()
+    {
+        new MyDBUtils();
+    }
+
     public void createGene(Gene newGene) {
 
         String sql = "insert into Gene (id_gene, name, description) values ('" +

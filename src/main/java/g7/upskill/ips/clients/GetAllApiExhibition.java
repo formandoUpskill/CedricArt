@@ -3,7 +3,6 @@ package g7.upskill.ips.clients;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import g7.upskill.ips.LigacaoArtsy;
 import g7.upskill.ips.MyDBUtils;
 import g7.upskill.ips.adapters.LocalDateAdapter;
 import g7.upskill.ips.model.Exhibition;

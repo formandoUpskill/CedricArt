@@ -3,31 +3,59 @@ package g7.upskill.ips;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import okhttp3.*;
+
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.Properties;
 
 public class LigacaoArtsy {
     public static void main(String[] args) {
-        LigacaoArtsy pesquisa = new LigacaoArtsy();
-        pesquisa.searchArtistsByLetter("B");
+
     }
 
     private OkHttpClient client;
     private String xappToken;
 
+
+    public static  String CLIENT_ID;
+
+    public static  String CLIENT_SECRET;
+
+    public static  String XAPP_TOKEN;
+
+   private static Properties config;
+
+
     public LigacaoArtsy() {
-        this.client = new OkHttpClient();
-        this.xappToken = generateXappToken();
+        try {
+            this.config= new Properties();
+            FileReader file = new FileReader("CedricArt.config");
+            config.load(file);
+            CLIENT_ID = this.config.getProperty("CLIENT_ID");
+            CLIENT_SECRET = this.config.getProperty("CLIENT_SECRET");
+            XAPP_TOKEN  = this.config.getProperty("XAPP_TOKEN");
+
+            file.close();
+        } catch (IOException e) {
+            System.out.println("Config file not found "+  e.getMessage());
+        }
+
+        //this.client = new OkHttpClient();
+       this.xappToken = generateXappToken();
     }
+
+
+
+
 
 
     public static String generateXappToken() {
 
         OkHttpClient client = new OkHttpClient();
 
-
-        String clientId = "9f14b9f06093d764ddf7";
-        String clientSecret = "a8f0f836b1832d14bdc0e3e4c75559c4";
-        String tokenUrl = "https://api.artsy.net/api/tokens/xapp_token";
+        String clientId = LigacaoArtsy.CLIENT_ID;
+        String clientSecret = LigacaoArtsy.CLIENT_SECRET;
+        String tokenUrl = LigacaoArtsy.XAPP_TOKEN;
 
         RequestBody formBody = new FormBody.Builder()
                 .add("client_id", clientId)
