@@ -220,7 +220,7 @@ public class DBStorage {
         try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
                 MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
 
-            exists= MyDBUtils.exist(connection,"partner", where );
+            exists= MyDBUtils.exist(connection,"Partner", where );
 
         } catch (SQLException e) {
             System.out.println("exec_sql:" + where+ " Error: " + e.getMessage());
@@ -241,7 +241,7 @@ public class DBStorage {
         try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
                 MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
 
-            exists= MyDBUtils.exist(connection,"exhibition", where );
+            exists= MyDBUtils.exist(connection,"Exhibition", where );
 
         } catch (SQLException e) {
             System.out.println("exec_sql:" + where+ " Error: " + e.getMessage());
@@ -299,7 +299,7 @@ public class DBStorage {
 
     private void updateArtworkPartner(Partner partner, Artwork artwork){
 
-        String update = "Update artwork set id_partner= '"+partner.getId() + "' WHERE id_artwork = '"+ artwork.getId() +"'";
+        String update = "Update Artwork set id_partner= '"+partner.getId() + "' WHERE id_artwork = '"+ artwork.getId() +"'";
 
         System.out.println("update " + update);
 
@@ -349,7 +349,7 @@ public class DBStorage {
 
     public void createCountry(Country newCountry) {
 
-        String sql = "insert into country (country_code, nationality) values ('"+
+        String sql = "insert into Country (country_code, nationality) values ('"+
                 newCountry.getCountry_code() + "','" +
                 newCountry.getNationality() +
                 "');";
@@ -380,7 +380,7 @@ public class DBStorage {
                     "(select Id_Exhibition_Status from Exhibition_Status where status='" + exhibition.getStatus() +"')" +
                     ");";
 
-            System.out.println("nsert into Exhibition " + sql);
+            System.out.println("insert into Exhibition " + sql);
 
             try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
                     MyDBUtils.DB_SERVER, MyDBUtils.DB_PORT, MyDBUtils.DB_NAME, MyDBUtils.DB_USER, MyDBUtils.DB_PWD);) {
@@ -396,7 +396,7 @@ public class DBStorage {
 
     public void createGallerist(Gallerist newGallerist) {
 
-        String sql = "insert into gallerist (start_at, end_at) values ('"+
+        String sql = "insert into Gallerist (start_at, end_at) values ('"+
                 newGallerist.getEnd_at()+ "','" +
                 newGallerist.getStart_at() +
                 "');";
@@ -414,7 +414,7 @@ public class DBStorage {
 
     public void createCoordinator(Coordinator newCoordinator) {
 
-        String sql = "insert into coordinator (start_at, end_at) values ('" +
+        String sql = "insert into Coordinator (start_at, end_at) values ('" +
                 newCoordinator.getStart_at() + "','" +
                 newCoordinator.getEnd_at() +
                 "');";
