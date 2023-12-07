@@ -22,6 +22,9 @@ public class Partner {
 
     public String getShowsLink() {
 
+        if (links.shows == null)
+         return null;
+
         return links.shows.href;
     }
 

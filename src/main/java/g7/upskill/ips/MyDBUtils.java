@@ -4,6 +4,9 @@ package g7.upskill.ips;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
@@ -21,7 +24,7 @@ public class MyDBUtils {
     {
         try {
             this.config= new Properties();
-            FileReader file = new FileReader("CedricArt.config");
+            FileReader file = new FileReader("resources/config/CedricArt.config");
             config.load(file);
             DB_SERVER = this.config.getProperty("DB_SERVER");
             DB_PORT = this.config.getProperty("DB_PORT");
@@ -33,10 +36,26 @@ public class MyDBUtils {
         } catch (IOException e) {
             System.out.println("Config file not found "+  e.getMessage());
         }
+
+        System.out.println("DB_SERVER " + DB_SERVER);
     }
 
 
+    public static LocalDateTime covertSqlDateToLocalDateTime(Date sqlDate) {
 
+        // Step 1: Convert java.sql.Date to java.util.Date
+        java.util.Date utilDate = new java.util.Date(sqlDate.getTime());
+
+        // Step 2: Create Instant from java.util.Date
+        Instant instant = utilDate.toInstant();
+
+        // Step 3: Convert Instant to LocalDateTime
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+
+
+        return localDateTime;
+
+    }
 
     public static String cleanString(String original) {
         if (original != null) {
@@ -100,7 +119,7 @@ public class MyDBUtils {
      * @return
      * @throws SQLException
      */
-    private static ResultSet exec_query(Connection conn,String sqlCmd) throws SQLException
+    public static ResultSet exec_query(Connection conn,String sqlCmd) throws SQLException
     {
         Statement statement = conn.createStatement();
         ResultSet rs = statement.executeQuery(sqlCmd);
@@ -238,27 +257,4 @@ public class MyDBUtils {
 
         return default_value;
     }
-
-    /**
-     * @author:
-     * @param conn
-     * @param sqlCmd
-     * @return
-     * @throws SQLException
-     */
-    public static ListIdDesc<Integer, String> get_list_id_desc(Connection conn, String sqlCmd) throws SQLException
-    {
-        ListIdDesc<Integer, String> list= new ListIdDesc();
-        IdDesc<Integer, String> idDesc;
-
-        ResultSet rs = exec_query(conn, sqlCmd);
-        while (rs.next()){
-            idDesc = new IdDesc(rs.getInt(1),rs.getString(2));
-            list.add(idDesc);
-        }
-        return list;
-
-    }
-
-
 }

@@ -16,12 +16,15 @@ public class Main {
     public static void main(String[] args) {
 
 
+        GetAllApi getAllApi = new GetAllApi();
+
+        System.out.println("GetAllApi GetAllApi GetAllApi");
 
 // inserir todos os genes na base de dados
-        GetAllApi.loadAllGenes();
+        getAllApi.loadAllGenes();
 
         // Inserir os restantes elementos nas respectivas tabelas
-        GetAllApi.loadAllArtistsArworksPartnersExhibitions();
+        getAllApi.loadAllArtistsArworksPartnersExhibitions();
 
 
     }

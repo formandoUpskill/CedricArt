@@ -16,6 +16,10 @@ public class DBStorage {
         new MyDBUtils();
     }
 
+    /**
+     *
+     * @param newGene
+     */
     public void createGene(Gene newGene) {
 
         String sql = "insert into Gene (id_gene, name, description) values ('" +
@@ -34,10 +38,24 @@ public class DBStorage {
         }
     }
 
+    /**
+     *
+     * @param newArtist
+     */
     public void createArtist(Artist newArtist) {
 
-        String sql = "insert into Artist (id_Artist, location, hometown, name, biography, slug, birthyear, deathyear, thumbnail, " +
-                "url, nationality)" +
+        String sql = "insert into Artist (" +
+                "id_Artist, " +
+                "location, " +
+                "hometown, " +
+                "name," +
+                " biography," +
+                " slug," +
+                " birthyear, " +
+                "deathyear, " +
+                "thumbnail, " +
+                "url, " +
+                "nationality)" +
                 " values ('"+ newArtist.getId() + "','" +
                 newArtist.getLocation() + "','" +
                 newArtist.getHometown() + "','" +
@@ -63,50 +81,41 @@ public class DBStorage {
     }
 
 
+    /**
+     *
+     * @return
+     */
 
+    private List getAllGenes(Artwork artwork){
 
-
-    private String getIdGene(String categoria)
-    {
-
-
-        String default_Value ="NA";
-        Object Id_Gene;
-
-        try( Connection connection  = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
-                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD))
-        {
-
-            Id_Gene=  MyDBUtils.lookup(connection, "id_Gene", "Gene", "name='" + categoria +"'", default_Value);
-
-            return Id_Gene.toString();
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return default_Value;
-    }
-
-
-
-    public static List getAllGenesDB()
-
-    {
-
-        List listGenes = new ArrayList<>();
+        List<Gene> listGenes = new ArrayList<>();
         Gene gene;
 
         try( Connection connection  = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
                 MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD))
         {
 
-            ResultSet rs= MyDBUtils.lookup(connection, "*", "Gene");
+            String sqlCMD= MyDBUtils.get_select_command(
+                    "Gene.id_Gene, " +
+                            "Gene.name, " +
+                            "Gene.description",
+                    " Gene, " +
+                            "Artwork_gene ",
+                    "Gene.id_Gene = Artwork_gene.id_Gene AND " +
+                            " Artwork_gene.id_Artwork= '"+ artwork.getId() + "'",
+                    "Gene.name ASC");
+
+
+            System.out.println("getAllGenes " + sqlCMD );
+
+            ResultSet rs= MyDBUtils.exec_query(connection,sqlCMD);
+
             while (rs.next())
             {
                 gene= new Gene();
-                gene.setId(rs.getString("id_Gene"));
-                gene.setName(rs.getString("name"));
-                gene.setDescription(rs.getString("description"));
+                gene.setId(rs.getString("Gene.id_Gene"));
+                gene.setName(rs.getString("Gene.name"));
+                gene.setDescription(rs.getString("Gene.description"));
 
                 listGenes.add(gene);
             }
@@ -120,8 +129,516 @@ public class DBStorage {
 
     }
 
+    public Artwork getArtwork(String artworkId)  {
+
+        Artwork artwork = new Artwork();
+        Partner partner = new Partner();
+
+        try( Connection connection  = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD))
+        {
+
+            String sqlCMD= MyDBUtils.get_select_command(
+                    "Artwork.id_Artwork," +
+                            " Artwork.title, " +
+                            "Artwork.date," +
+                            " Artwork.thumbnail," +
+                            "Artwork.created_at, " +
+                            "Artwork.updated_at, " +
+                            "Partner.id_Partner," +
+                            " Partner.name, " +
+                            "Partner.region, " +
+                            "Partner.website",
+                    "  Artwork ,  " +
+                            " Partner ",
+                    " Artwork.id_Partner= Partner.id_Partner AND " +
+                            " id_Artwork= '" + artworkId + "'" );
 
 
+            ResultSet rs= MyDBUtils.exec_query(connection,sqlCMD);
+
+            System.out.println(sqlCMD);
+            while (rs.next())
+            {
+
+                artwork.setId(rs.getString("Artwork.id_Artwork"));
+                artwork.setTitle(rs.getString("Artwork.title"));
+                artwork.setThumbnail(rs.getString("Artwork.thumbnail"));
+                artwork.setDate(rs.getString("Artwork.date"));
+                artwork.setCreated_at(MyDBUtils.covertSqlDateToLocalDateTime(rs.getDate("created_at")));
+                artwork.setUpdated_at(MyDBUtils.covertSqlDateToLocalDateTime(rs.getDate("updated_at")));
+
+                partner.setId(rs.getString("Partner.id_Partner"));
+                partner.setName(rs.getString("Partner.name"));
+                partner.setRegion(rs.getString("Partner.region"));
+                partner.setWebsite(rs.getString("Partner.website"));
+
+                artwork.setPartner(partner);
+
+                artwork.setGeneList(getAllGenes(artwork));
+
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return artwork;
+    }
+
+
+    /**
+     *
+     * @param artwork
+     * @return
+     */
+
+
+
+    /**
+     *
+     * @return
+     */
+    public List<Artwork> getAllArtworks()
+
+    {
+
+        List<Artwork> listArtwork = new ArrayList<>();
+        Artwork artwork;
+        Partner partner;
+
+        try( Connection connection  = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD))
+        {
+
+            String sqlCMD= MyDBUtils.get_select_command(
+                    "Artwork.id_Artwork, " +
+                            "Artwork.title, " +
+                            "Artwork.date, " +
+                            "Artwork.thumbnail, " +
+                            "Artwork.created_at, " +
+                            "Artwork.updated_at, " +
+                            "Partner.id_Partner, " +
+                            "Partner.name, " +
+                            "Partner.region, " +
+                            "Partner.website ",
+                    " Artwork , " +
+                            " Partner",
+                    " Artwork.id_Partner= Partner.id_Partner",
+                    "title ASC");
+
+            ResultSet rs= MyDBUtils.exec_query(connection,sqlCMD);
+
+            while (rs.next())
+            {
+                artwork= new Artwork();
+                artwork.setId(rs.getString("Artwork.id_Artwork"));
+                artwork.setTitle(rs.getString("Artwork.title"));
+                artwork.setThumbnail(rs.getString("Artwork.thumbnail"));
+                artwork.setDate(rs.getString("Artwork.date"));
+                artwork.setCreated_at(MyDBUtils.covertSqlDateToLocalDateTime(rs.getDate("created_at")));
+                artwork.setUpdated_at(MyDBUtils.covertSqlDateToLocalDateTime(rs.getDate("updated_at")));
+
+                partner = new Partner();
+                partner.setId(rs.getString("Partner.id_Partner"));
+                partner.setName(rs.getString("Partner.name"));
+                partner.setRegion(rs.getString("Partner.region"));
+                partner.setWebsite(rs.getString("Partner.website"));
+
+                artwork.setPartner(partner);
+
+                listArtwork.add(artwork);
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return listArtwork;
+
+    }
+
+
+    /**
+     *
+     * @param partner_id
+     * @return
+     */
+    public List<Artwork> getAllArtworksByPartner(String partner_id)
+    {
+        List<Artwork> listArtwork = new ArrayList<>();
+        Artwork artwork;
+        Partner partner;
+
+        try( Connection connection  = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD))
+        {
+
+            String sqlCMD= MyDBUtils.get_select_command(
+                    "Artwork.id_Artwork, " +
+                            "Artwork.title, " +
+                            "Artwork.date, " +
+                            "Artwork.thumbnail, " +
+                            "Artwork.created_at, " +
+                            "Artwork.updated_at, " +
+                            "Partner.id_Partner, " +
+                            "Partner.name, " +
+                            "Partner.region, " +
+                            "Partner.website ",
+                    " Artwork , " +
+                            " Partner",
+                    "Artwork.id_Partner= Partner.id_Partner AND " +
+                            " Artwork.id_Partner = '"+  partner_id + "'" ,
+                    "title ASC");
+
+
+            ResultSet rs= MyDBUtils.exec_query(connection,sqlCMD);
+
+            while (rs.next())
+            {
+                artwork= new Artwork();
+                artwork.setId(rs.getString("Artwork.id_Artwork"));
+                artwork.setTitle(rs.getString("Artwork.title"));
+                artwork.setThumbnail(rs.getString("Artwork.thumbnail"));
+                artwork.setDate(rs.getString("Artwork.date"));
+                artwork.setCreated_at(MyDBUtils.covertSqlDateToLocalDateTime(rs.getDate("created_at")));
+                artwork.setUpdated_at(MyDBUtils.covertSqlDateToLocalDateTime(rs.getDate("updated_at")));
+
+                partner = new Partner();
+                partner.setId(rs.getString("Partner.id_Partner"));
+                partner.setName(rs.getString("Partner.name"));
+                partner.setRegion(rs.getString("Partner.region"));
+                partner.setWebsite(rs.getString("Partner.website"));
+
+                artwork.setPartner(partner);
+
+
+                listArtwork.add(artwork);
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return listArtwork;
+    }
+
+
+    public List<Artwork> getAllArtworksByExhibition(String exhibition_id)
+    {
+        List<Artwork> listArtwork = new ArrayList<>();
+        Artwork artwork;
+
+
+        try( Connection connection  = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD))
+        {
+
+            String sqlCMD= MyDBUtils.get_select_command(
+                    "Artwork.id_Artwork, " +
+                            "Artwork.title, " +
+                            "Artwork.date, " +
+                            "Artwork.thumbnail, " +
+                            "Artwork.created_at, " +
+                            "Artwork.updated_at " ,
+                    " Artwork , " +
+                            " Exhibition_Artwork ",
+                    "Artwork.id_Artwork= Exhibition_Artwork.id_Artwork AND " +
+                            " Exhibition_Artwork.id_Exhibition = '"+  exhibition_id + "'" ,
+                    "title ASC");
+
+
+            ResultSet rs= MyDBUtils.exec_query(connection,sqlCMD);
+
+            while (rs.next())
+            {
+                artwork= new Artwork();
+                artwork.setId(rs.getString("Artwork.id_Artwork"));
+                artwork.setTitle(rs.getString("Artwork.title"));
+                artwork.setThumbnail(rs.getString("Artwork.thumbnail"));
+                artwork.setDate(rs.getString("Artwork.date"));
+                artwork.setCreated_at(MyDBUtils.covertSqlDateToLocalDateTime(rs.getDate("created_at")));
+                artwork.setUpdated_at(MyDBUtils.covertSqlDateToLocalDateTime(rs.getDate("updated_at")));
+
+                listArtwork.add(artwork);
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return listArtwork;
+    }
+
+
+
+    /**
+     *
+     * @param exhibitionId
+     * @return
+     */
+    public Exhibition getExhibition(String exhibitionId)  {
+
+
+        Exhibition exhibition = new Exhibition();
+
+        try( Connection connection  = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD))
+        {
+
+            String sqlCMD= MyDBUtils.get_select_command(
+                    "Exhibition.id_Exhibition, " +
+                            "Exhibition.name, " +
+                            "Exhibition.description, " +
+                            "Exhibition.thumbnail," +
+                            "Exhibition.start_at, " +
+                            "Exhibition.end_at, " +
+                            "Exhibition_Status.Status, " +
+                            "Exhibition.id_Partner",
+                    " Exhibition, " +
+                            " Exhibition_Status",
+                    "Exhibition.Id_Exhibition_Status = Exhibition_Status.Id_Exhibition_Status AND " +
+                            " id_Exhibition= '" + exhibitionId + "'" );
+
+
+            ResultSet rs= MyDBUtils.exec_query(connection,sqlCMD);
+
+            System.out.println(sqlCMD);
+            while (rs.next())
+            {
+
+                exhibition.setId(rs.getString("Exhibition.id_Exhibition"));
+                exhibition.setName(rs.getString("Exhibition.name"));
+                exhibition.setDescription(rs.getString("Exhibition.description"));
+                exhibition.setThumbnail(rs.getString("Exhibition.thumbnail"));
+                exhibition.setStart_at(MyDBUtils.covertSqlDateToLocalDateTime(rs.getDate("Exhibition.start_at")));
+                exhibition.setEnd_at(MyDBUtils.covertSqlDateToLocalDateTime(rs.getDate("Exhibition.end_at")));
+                exhibition.setId_Partner(rs.getString("Exhibition.id_Partner"));
+                exhibition.setStatus(rs.getString("Exhibition_Status.Status"));
+
+
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return exhibition;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<Exhibition> getAllExhibitions()
+
+    {
+
+        List<Exhibition> listExhibition = new ArrayList<>();
+
+        Exhibition exhibition;
+
+
+        try( Connection connection  = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD))
+        {
+
+            String sqlCMD= MyDBUtils.get_select_command(
+                    "Exhibition.id_Exhibition, " +
+                            "Exhibition.name, " +
+                            "Exhibition.description, " +
+                            "Exhibition.thumbnail," +
+                            "Exhibition.start_at, " +
+                            "Exhibition.end_at, " +
+                            "Exhibition_Status.Status, " +
+                            "Exhibition.id_Partner",
+                    " Exhibition, " +
+                            " Exhibition_Status",
+                    " Exhibition.Id_Exhibition_Status = Exhibition_Status.Id_Exhibition_Status");
+
+            ResultSet rs= MyDBUtils.exec_query(connection,sqlCMD);
+
+            while (rs.next())
+            {
+
+                exhibition = new Exhibition();
+                exhibition.setId(rs.getString("Exhibition.id_Exhibition"));
+                exhibition.setName(rs.getString("Exhibition.name"));
+                exhibition.setDescription(rs.getString("Exhibition.description"));
+                exhibition.setThumbnail(rs.getString("Exhibition.thumbnail"));
+                exhibition.setStart_at(MyDBUtils.covertSqlDateToLocalDateTime(rs.getDate("Exhibition.start_at")));
+                exhibition.setEnd_at(MyDBUtils.covertSqlDateToLocalDateTime(rs.getDate("Exhibition.end_at")));
+                exhibition.setId_Partner(rs.getString("Exhibition.id_Partner"));
+                exhibition.setStatus(rs.getString("Exhibition_Status.Status"));
+
+                listExhibition.add(exhibition);
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return listExhibition;
+
+    }
+
+
+    /**
+     *
+     * @param partner_id
+     * @return
+     */
+    public List<Exhibition> getAllExhibitionsByPartner(String partner_id)
+
+    {
+
+        List<Exhibition> listExhibition = new ArrayList<>();
+
+        Exhibition exhibition;
+
+
+        try( Connection connection  = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD))
+        {
+
+            String sqlCMD= MyDBUtils.get_select_command(
+                    "Exhibition.id_Exhibition, " +
+                            "Exhibition.name, " +
+                            "Exhibition.description, " +
+                            "Exhibition.thumbnail," +
+                            "Exhibition.start_at, " +
+                            "Exhibition.end_at, " +
+                            "Exhibition_Status.Status, " +
+                            "Exhibition.id_Partner",
+                    " Exhibition, " +
+                            " Exhibition_Status",
+                    " Exhibition.Id_Exhibition_Status = Exhibition_Status.Id_Exhibition_Status AND " +
+                            " Exhibition.id_Partner= '" + partner_id + "'" );
+
+            ResultSet rs= MyDBUtils.exec_query(connection,sqlCMD);
+
+            while (rs.next())
+            {
+
+                exhibition = new Exhibition();
+                exhibition.setId(rs.getString("Exhibition.id_Exhibition"));
+                exhibition.setName(rs.getString("Exhibition.name"));
+                exhibition.setDescription(rs.getString("Exhibition.description"));
+                exhibition.setThumbnail(rs.getString("Exhibition.thumbnail"));
+                exhibition.setStart_at(MyDBUtils.covertSqlDateToLocalDateTime(rs.getDate("Exhibition.start_at")));
+                exhibition.setEnd_at(MyDBUtils.covertSqlDateToLocalDateTime(rs.getDate("Exhibition.end_at")));
+                exhibition.setId_Partner(rs.getString("Exhibition.id_Partner"));
+                exhibition.setStatus(rs.getString("Exhibition_Status.Status"));
+
+                listExhibition.add(exhibition);
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return listExhibition;
+
+    }
+    /**
+     *
+     * @param partnerId
+     * @return
+     */
+    public Partner getPartner(String partnerId)  {
+
+
+        Partner partner = new Partner();
+
+        try( Connection connection  = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD))
+        {
+
+            String sqlCMD= MyDBUtils.get_select_command(
+                    "*",
+                    "Partner",
+                    " id_Partner= '" + partnerId + "'" );
+
+
+            ResultSet rs= MyDBUtils.exec_query(connection,sqlCMD);
+
+            System.out.println(sqlCMD);
+            while (rs.next())
+            {
+
+                partner.setId(rs.getString("Partner.id_Partner"));
+                partner.setName(rs.getString("Partner.name"));
+                partner.setRegion(rs.getString("Partner.region"));
+                partner.setWebsite(rs.getString("Partner.website"));
+
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return partner;
+    }
+
+
+
+    /**
+     *
+     * @return
+     */
+    public List<Partner> getAllPartners()
+
+    {
+
+        List<Partner> listPartner = new ArrayList<>();
+
+        Partner partner;
+
+
+        try( Connection connection  = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD))
+        {
+
+            String sqlCMD= MyDBUtils.get_select_command(
+                    "*",
+                    " Partner");
+
+            ResultSet rs= MyDBUtils.exec_query(connection,sqlCMD);
+
+            while (rs.next())
+            {
+
+                partner = new Partner();
+                partner.setId(rs.getString("Partner.id_Partner"));
+                partner.setName(rs.getString("Partner.name"));
+                partner.setRegion(rs.getString("Partner.region"));
+                partner.setWebsite(rs.getString("Partner.website"));
+
+                listPartner.add(partner);
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return listPartner;
+
+    }
+
+    /**
+     *
+     * @param artwork
+     * @param artist
+     */
     private void insertArtworkArtist(Artwork artwork, Artist artist)
     {
 
@@ -144,8 +661,12 @@ public class DBStorage {
         }
     }
 
-
-    private void insertExhibitionArtwork(Artwork artwork, Exhibition exhibition)
+    /**
+     *
+     * @param artwork
+     * @param exhibition
+     */
+    public void insertExhibitionArtwork(Artwork artwork, Exhibition exhibition)
     {
 
         if (artworkExists(artwork) && exibitionExists(exhibition))
@@ -167,14 +688,17 @@ public class DBStorage {
         }
     }
 
-
+    /**
+     *
+     * @param artist
+     * @return
+     */
     private boolean artistExists(Artist artist)
     {
         boolean exists= false;
 
         String where= "id_Artist='" + artist.getId()+"'";
 
-        System.out.println("artistExists artistExists artistExists" + where );
 
         try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
                 MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
@@ -188,13 +712,16 @@ public class DBStorage {
         return exists;
     }
 
+    /**
+     *
+     * @param newArtwork
+     * @return
+     */
     private boolean artworkExists(Artwork newArtwork)
     {
         boolean exists= false;
 
         String where= "id_Artwork='" + newArtwork.getId()+"'";
-
-        System.out.println("artworkExists artworkExists artworkExists" + where );
 
         try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
                 MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
@@ -209,7 +736,11 @@ public class DBStorage {
     }
 
 
-
+    /**
+     *
+     * @param partner
+     * @return
+     */
     private boolean partnerExists(Partner partner)
     {
         boolean exists= false;
@@ -230,7 +761,11 @@ public class DBStorage {
     }
 
 
-
+    /**
+     *
+     * @param exhibition
+     * @return
+     */
     private boolean exibitionExists(Exhibition exhibition)
     {
         boolean exists= false;
@@ -241,7 +776,7 @@ public class DBStorage {
         try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
                 MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
 
-            exists= MyDBUtils.exist(connection,"exhibition", where );
+            exists= MyDBUtils.exist(connection,"Exhibition", where );
 
         } catch (SQLException e) {
             System.out.println("exec_sql:" + where+ " Error: " + e.getMessage());
@@ -249,6 +784,12 @@ public class DBStorage {
 
         return exists;
     }
+
+    /**
+     *
+     * @param newArtwork
+     * @param geneList
+     */
     private void insertArtworkGenes(Artwork newArtwork, List<Gene> geneList)
     {
 
@@ -269,6 +810,12 @@ public class DBStorage {
         }
     }
 
+    /**
+     *
+     * @param artwork
+     * @param geneList
+     * @param artist
+     */
     public void createArtwork(Artwork artwork, List<Gene> geneList, Artist artist) {
 
 
@@ -297,9 +844,14 @@ public class DBStorage {
 
     }
 
+    /**
+     *
+     * @param partner
+     * @param artwork
+     */
     private void updateArtworkPartner(Partner partner, Artwork artwork){
 
-        String update = "Update artwork set id_partner= '"+partner.getId() + "' WHERE id_artwork = '"+ artwork.getId() +"'";
+        String update = "Update Artwork set id_partner= '"+partner.getId() + "' WHERE id_artwork = '"+ artwork.getId() +"'";
 
         System.out.println("update " + update);
 
@@ -312,64 +864,63 @@ public class DBStorage {
         }
     }
 
-
+    /**
+     *
+     * @param partner
+     * @param artwork
+     */
     public void createPartner(Partner partner, Artwork artwork) {
 
-       if (partnerExists(partner)){
+        if (partnerExists(partner)){
 
-           updateArtworkPartner(partner,artwork);
-       }
-       else {
+            updateArtworkPartner(partner,artwork);
+        }
+        else {
 
-           String sqlInsert = "insert into Partner (id_Partner,region, name, website, id_Gallerist, id_Coordinator ) values ('" +
-                   partner.getId() + "','" +
-                   partner.getRegion() + "','" +
-                   partner.getName() + "','" +
-                   partner.getWebsite() + "','" +
-                   partner.getId_gallerist() + "','" +
-                   partner.getId_coordinator() +
-                   "');";
-
-           System.out.println("insert " + sqlInsert);
-
-           try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
-                   MyDBUtils.DB_SERVER, MyDBUtils.DB_PORT, MyDBUtils.DB_NAME, MyDBUtils.DB_USER, MyDBUtils.DB_PWD);) {
-
-               MyDBUtils.exec_sql(connection, sqlInsert);
-           } catch (SQLException e) {
-               System.out.println("exec_sql:" + sqlInsert + " Error: " + e.getMessage());
-           }
+            String sqlInsert = "insert into Partner (id_Partner,region, name, website, id_Gallerist, id_Coordinator ) values ('" +
+                    partner.getId() + "','" +
+                    partner.getRegion() + "','" +
+                    partner.getName() + "','" +
+                    partner.getWebsite() + "','" +
+                    partner.getId_gallerist() + "','" +
+                    partner.getId_coordinator() +
+                    "');";
 
 
-           updateArtworkPartner(partner, artwork);
-       }
-    }
+            try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
+                    MyDBUtils.DB_SERVER, MyDBUtils.DB_PORT, MyDBUtils.DB_NAME, MyDBUtils.DB_USER, MyDBUtils.DB_PWD);) {
+
+                MyDBUtils.exec_sql(connection, sqlInsert);
+            } catch (SQLException e) {
+                System.out.println("exec_sql:" + sqlInsert + " Error: " + e.getMessage());
+            }
 
 
-
-    public void createCountry(Country newCountry) {
-
-        String sql = "insert into country (country_code, nationality) values ('"+
-                newCountry.getCountry_code() + "','" +
-                newCountry.getNationality() +
-                "');";
-
-        System.out.println("insert " + sql);
-
-        try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
-                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
-
-            MyDBUtils.exec_sql(connection,sql);
-        } catch (SQLException e) {
-            System.out.println("exec_sql:" + sql + " Error: " + e.getMessage());
+            updateArtworkPartner(partner, artwork);
         }
     }
 
+
+    /**
+     *
+     * @param exhibition
+     * @param partner
+     * @param artwork
+     */
     public void createExhibition(Exhibition exhibition, Partner partner, Artwork artwork) {
 
         if (!exibitionExists(exhibition)) {
 
-            String sql = "insert into Exhibition (id_Exhibition, end_at, start_at, thumbnail, description, name, id_Partner,Id_Exhibition_Status) values ('" +
+            String sql = "insert into Exhibition (" +
+                    "id_Exhibition, " +
+                    "end_at, " +
+                    "start_at, " +
+                    "thumbnail, " +
+                    "description, " +
+                    "name, " +
+                    "id_Partner," +
+                    "Id_Exhibition_Status)" +
+                    " values ('" +
                     exhibition.getId() + "','" +
                     exhibition.getEnd_at() + "','" +
                     exhibition.getStart_at() + "','" +
@@ -380,7 +931,7 @@ public class DBStorage {
                     "(select Id_Exhibition_Status from Exhibition_Status where status='" + exhibition.getStatus() +"')" +
                     ");";
 
-            System.out.println("nsert into Exhibition " + sql);
+
 
             try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
                     MyDBUtils.DB_SERVER, MyDBUtils.DB_PORT, MyDBUtils.DB_NAME, MyDBUtils.DB_USER, MyDBUtils.DB_PWD);) {
@@ -394,39 +945,5 @@ public class DBStorage {
         }
     }
 
-    public void createGallerist(Gallerist newGallerist) {
 
-        String sql = "insert into gallerist (start_at, end_at) values ('"+
-                newGallerist.getEnd_at()+ "','" +
-                newGallerist.getStart_at() +
-                "');";
-
-        System.out.println("insert " + sql);
-
-        try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
-                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
-
-            MyDBUtils.exec_sql(connection,sql);
-        } catch (SQLException e) {
-            System.out.println("exec_sql:" + sql + " Error: " + e.getMessage());
-        }
-    }
-
-    public void createCoordinator(Coordinator newCoordinator) {
-
-        String sql = "insert into coordinator (start_at, end_at) values ('" +
-                newCoordinator.getStart_at() + "','" +
-                newCoordinator.getEnd_at() +
-                "');";
-
-        System.out.println("insert " + sql);
-
-        try (Connection connection = MyDBUtils.get_connection(MyDBUtils.db_type.DB_MYSQL,
-                MyDBUtils.DB_SERVER,MyDBUtils.DB_PORT,MyDBUtils.DB_NAME,MyDBUtils.DB_USER,MyDBUtils.DB_PWD);){
-
-            MyDBUtils.exec_sql(connection,sql);
-        } catch (SQLException e) {
-            System.out.println("exec_sql:" + sql + " Error: " + e.getMessage());
-        }
-    }
 }

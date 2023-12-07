@@ -11,17 +11,24 @@ import java.util.Properties;
 public class GetAllApi {
 
 
-    Properties config;
+   private  DBStorage storage;
+   // private Properties config;
 
-    public static void loadAllGenes() {
-
+    public GetAllApi(){
+        this.storage = new DBStorage();
         new LigacaoArtsy();
+    }
+
+
+    public void loadAllGenes() {
+
+      //  new LigacaoArtsy();
 
         String xappToken = LigacaoArtsy.generateXappToken();
 
-        String apiUrl = "https://api.artsy.net/api/genes?size=100&total_count=true";
+        String apiUrl = "https://api.artsy.net/api/genes?total_count=true";
 
-        DBStorage storage = new DBStorage();
+       //  DBStorage storage = new DBStorage();
         List<Gene> geneList = new ArrayList<>();
 
         do {
@@ -34,15 +41,16 @@ public class GetAllApi {
 
         for (Gene gene : geneList) {
             // inserir esse artista na base de dados
-            storage.createGene(gene);
+            this.storage.createGene(gene);
         }
     }
 
 
-    public static void loadAllArtistsArworksPartnersExhibitions() {
-        DBStorage storage = new DBStorage();
+    public void loadAllArtistsArworksPartnersExhibitions() {
+       // DBStorage storage = new DBStorage();
         List<Artist> artistsList = new ArrayList<>();
         List<Artwork> artworksList = new ArrayList<>();
+        List<Artwork> artworksShowsList = new ArrayList<>();
         List<Gene> geneList = new ArrayList<>();
         List<Exhibition> exhibitionList = new ArrayList<>();
 
@@ -52,7 +60,7 @@ public class GetAllApi {
         String apiUrl = "";
 
         // Obter todos os artistas com obras de arte
-        apiUrl = "https://api.artsy.net/api/artists?artworks=true&size=100&total_count=true";
+        apiUrl = "https://api.artsy.net/api/artists?artworks=true&size=1000&total_count=true";
         do {
             apiUrl = GetAllApiArtists.getAllArtistsIdWithArtworks(apiUrl, xappToken, artistsList);
 
@@ -62,7 +70,7 @@ public class GetAllApi {
 
         for (Artist artist : artistsList) {
             // inserir esse artista na base de dados
-            storage.createArtist(artist);
+            this.storage.createArtist(artist);
 
 
             // obter a lista de obras de arte desse artista
@@ -82,7 +90,7 @@ public class GetAllApi {
                 while (!apiUrl.isBlank());
 
                 // inserir essa obra de arte na base de dados
-                storage.createArtwork(artwork, geneList, artist);
+                this.storage.createArtwork(artwork, geneList, artist);
 
                 // ir buscar o partner que tem essa obra de arte
 
@@ -90,29 +98,58 @@ public class GetAllApi {
                 if (apiUrl != null) {
                     Partner partner = GetAllApiPartners.searchPartner(apiUrl, xappToken, 1, 2);
 
-                    storage.createPartner(partner, artwork);
+                    this.storage.createPartner(partner, artwork);
 
                     // obter todas as exposições desse partner
 
                     apiUrl = partner.getShowsLink() + "&total_count=true";
 
+                    if (apiUrl != null) {
 
-                    exhibitionList = new ArrayList<>();
-                    do {
-                        apiUrl = GetAllApiExhibition.searchAllExhibitions(apiUrl, xappToken, exhibitionList);
+                        exhibitionList = new ArrayList<>();
+                        do {
+                            apiUrl = GetAllApiExhibition.searchAllExhibitions(apiUrl, xappToken, exhibitionList);
 
-                    }
-                    while (!apiUrl.isBlank());
+                        }
+                        while (!apiUrl.isBlank());
 
-                    for (Exhibition exhibition : exhibitionList) {
-                        // Inserir o show na tabela exibibion e levar o id_partner (fk)
-                        storage.createExhibition(exhibition, partner, artwork);
+                        for (Exhibition exhibition : exhibitionList) {
+                            // Inserir o show na tabela exibibion e levar o id_partner (fk)
+                            this.storage.createExhibition(exhibition, partner, artwork);
+
+                        }
                     }
                 }
             }
 
         }
+    }
 
+    // Obter todas as obras de arte dessa exposição
+
+    public void insertExhibitionArtworks()
+    {
+/*
+                        // Obter todas as obras de arte dessa exposição
+                        apiUrl = exhibition.getArtworksLink() + "&total_count=true";
+                        System.out.println("artworksShowsList " + apiUrl);
+                        // https://api.artsy.net/api/artworks?show_id=4f6a3a300b665e0001000094
+
+                        artworksShowsList= new ArrayList<>();
+
+                        do {
+                            apiUrl = GetAllApiArtwork.getAllArtworksOfAnShow(apiUrl, xappToken, artworksShowsList);
+
+                        }
+                        while (!apiUrl.isBlank());
+
+                        System.out.println("artworksShowsList " + artworksShowsList.size());
+
+                        for (Artwork artworkShow : artworksShowsList) {
+
+                            storage.insertExhibitionArtwork(artworkShow,exhibition);
+                        }
+*/
 
     }
 

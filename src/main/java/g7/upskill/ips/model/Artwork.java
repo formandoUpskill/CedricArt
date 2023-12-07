@@ -5,6 +5,8 @@ package g7.upskill.ips.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -14,25 +16,6 @@ public class Artwork {
     private String title;
 
 
-    @SerializedName("_links")
-    private Links links;
-
-
-
-    public String getPartnersLink() {
-        if(links.partner==null)
-            return null;
-        return links.partner.href;
-    }
-
-
-    public String getArtistsLink() {
-        return links.artists.href;
-    }
-
-    public String getGenesLink() {
-        return links.genes.href;
-    }
 
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
@@ -45,6 +28,28 @@ public class Artwork {
 
     private String id_Exhibition;
 
+    private Partner partner;
+
+    private List<Gene> geneList;
+
+    public void setGeneList(List<Gene> geneList) {
+        this.geneList = geneList;
+    }
+
+    public Partner getPartner() {
+        return partner;
+    }
+
+    public void setPartner(Partner partner) {
+        this.partner = partner;
+    }
+
+    /**
+     * construtor
+     */
+    public Artwork(){
+        this.geneList= new ArrayList<>();
+    }
 
     public String getId() {
         return id;
@@ -62,12 +67,6 @@ public class Artwork {
         return updated_at;
     }
 
-    public String getThumbnail() {
-
-        if (links.thumbnail== null)
-            return null;
-        return links.thumbnail.href;
-    }
 
     public String getUrl() {
         return url;
@@ -138,6 +137,34 @@ public class Artwork {
                 ", category='" + category + '\'' +
                 ", id_Exhibition='" + id_Exhibition + '\'' +
                 '}';
+    }
+
+
+
+    @SerializedName("_links")
+    private Links links;
+
+    public String getThumbnail() {
+
+        if (links.thumbnail== null)
+            return null;
+        return links.thumbnail.href;
+    }
+
+
+    public String getPartnersLink() {
+        if(links.partner==null)
+            return null;
+        return links.partner.href;
+    }
+
+
+    public String getArtistsLink() {
+        return links.artists.href;
+    }
+
+    public String getGenesLink() {
+        return links.genes.href;
     }
 
 

@@ -16,8 +16,14 @@ public class Exhibition {
 
     private String status;
 
+
+
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public LocalDateTime getEnd_at() {
@@ -36,6 +42,10 @@ public class Exhibition {
 
     public String getStatus() {
         return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getDescription() {
@@ -90,6 +100,10 @@ public class Exhibition {
     @SerializedName("_links")
     private Links links;
 
+    public String getArtworksLink() {
+        return links.artworks.href;
+    }
+
     public static class Links {
         private Thumbnail thumbnail;
         private Image image;
@@ -98,6 +112,8 @@ public class Exhibition {
         private Partner partner;
         private Artworks artworks;
         private Images images;
+
+
 
         // Inner class for "thumbnail" link
         public static class Thumbnail {
